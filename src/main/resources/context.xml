@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+	<Parameter
+			name="groupId"
+			description="Maven Group ID"
+			value="${pom.groupId}"
+			override="false"/>
+	<Parameter
+			name="artifactId"
+			description="Maven Artifact ID"
+			value="${pom.artifactId}"
+			override="false"/>
+	<Parameter
+			name="name"
+			description="Maven Pom Name"
+			value="${pom.name}"
+			override="false"/>
+	<Parameter
+			name="version"
+			description="Maven Pom Version"
+			value="${pom.version}"
+			override="false"/>
+
+	<!--<Resource name="cassandraConnection" auth="Container"
+			  type="edu.byu.mtc.auth.oauth2.daos.CassandraConnection"
+			  factory="org.apache.naming.factory.BeanFactory"
+			  contactPoints="cass1.mtc.byu.edu,cass2.mtc.byu.edu,cass3.mtc.byu.edu,cass4.mtc.byu.edu"
+			  keyspace="mtcauth"
+			  username="cassandra"
+			  password="cassandra"
+			  closeMethod="close"/>-->
+
+	<!--<Resource
+			name="jdbc/mtcdb"
+			auth="Container"
+			driverClassName="oracle.jdbc.OracleDriver"
+			initialSize="5"
+			maxActive="30"
+			maxIdle="15"
+			minIdle="5"
+			maxWait="-1"
+			validationQuery="SELECT 1 FROM DUAL"
+			testOnBorrow="true"
+			testWhileIdle="true"
+			removeAbandoned="true"
+			removeAbandonedTimeout="60"
+			type="javax.sql.DataSource"
+			url="jdbc:oracle:thin:@mtcdb.mtc.byu.edu:1601:mtc1"
+			username="mas"
+			password="dontshare2"/>-->
+</Context>
