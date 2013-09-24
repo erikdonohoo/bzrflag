@@ -8,9 +8,13 @@ import com.murphysean.bzrflag.models.*;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.UUID;
 
 @Path("/games/{gameId}/teams/{teamId}/tanks")
 public class TankResource{
@@ -88,6 +92,62 @@ public class TankResource{
 			return Response.status(Response.Status.BAD_REQUEST).build();
 		PFAgent agent = (PFAgent)tank;
 
+		return Response.ok(createPotentialFieldGNUPlotString(gameController, agent, numSteps, title, type, visualMultiplier)).build();
+	}
+
+	@GET
+	@Path("/{tankId}")
+	@Produces("image/png")
+	public Response getPotentialFieldImageForTank(@PathParam(value="gameId") String gameId,
+													  @PathParam(value="teamId") String teamId,
+													  @PathParam(value="tankId") Integer tankId,
+													  @DefaultValue(value="20") @QueryParam(value="numSteps") Integer numSteps,
+													  @DefaultValue(value="Potential Field") @QueryParam(value="title") String title,
+													  @DefaultValue(value="all") @QueryParam(value="type") String type,
+													  @DefaultValue(value="1") @QueryParam(value="visualMultiplier") Float visualMultiplier){
+		if(!teamId.equals("me"))
+			return Response.status(Response.Status.FORBIDDEN).build();
+
+		GameController gameController = GameControllerSingleton.getInstance().getGameController(gameId);
+
+		if(gameController == null)
+			return Response.status(Response.Status.NOT_FOUND).build();
+
+		Team team = gameController.getGame().getTeam();
+		if(tankId >= team.getTanks().size())
+			return Response.status(Response.Status.NOT_FOUND).build();
+		Tank tank = team.getTanks().get(tankId);
+		if(!(tank instanceof PFAgent))
+			return Response.status(Response.Status.BAD_REQUEST).build();
+		PFAgent agent = (PFAgent)tank;
+
+		String gnuplot = createPotentialFieldGNUPlotString(gameController, agent, numSteps, title, type, visualMultiplier);
+
+		//Take this gnuplot string, and shuffle it to a file, then pass the file into gnuplot as an argument
+		try{
+			String uuid = UUID.randomUUID().toString();
+			File tmpGNUPlotFile = File.createTempFile(uuid, ".gpi");
+			FileWriter fw = new FileWriter(tmpGNUPlotFile.getAbsoluteFile());
+			fw.write(gnuplot);
+			fw.flush();
+			fw.close();
+
+			File tmpGNUPlotImage = new File(System.getProperty("java.io.tmpdir") + "/" + uuid + ".png");
+
+			//gnuplot -e "set term png;set output 'fields.png'" test.gpi
+			ProcessBuilder processBuilder = new ProcessBuilder("gnuplot", "-e", "set term png;set output '" + tmpGNUPlotImage.getAbsolutePath() + "'", tmpGNUPlotFile.getAbsolutePath());
+			Process p = processBuilder.start();
+			p.waitFor();
+
+			return Response.ok(tmpGNUPlotImage).build();
+		}catch(IOException e){
+			throw new RuntimeException(e);
+		}catch(InterruptedException e){
+			throw new RuntimeException(e);
+		}
+	}
+
+	private String createPotentialFieldGNUPlotString(GameController gameController, PFAgent agent, int numSteps, String title, String type, float visualMultiplier){
 		StringWriter stringWriter = new StringWriter();
 
 		stringWriter.write("#Auto Generated PF Field GNUPlot file\n");
@@ -140,7 +200,7 @@ public class TankResource{
 		}
 		stringWriter.write("e\n");
 
-		return Response.ok(stringWriter.toString()).build();
+		return stringWriter.toString();
 	}
 
 	@PUT
