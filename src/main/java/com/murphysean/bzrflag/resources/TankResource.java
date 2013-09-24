@@ -67,7 +67,7 @@ public class TankResource{
 	}
 
 	@GET
-	@Path("/{tankId}")
+	@Path("/{tankId}.gpi")
 	@Produces("text/plain")
 	public Response getPotentialFieldGraphFileForTank(@PathParam(value="gameId") String gameId,
 													  @PathParam(value="teamId") String teamId,
@@ -96,7 +96,7 @@ public class TankResource{
 	}
 
 	@GET
-	@Path("/{tankId}")
+	@Path("/{tankId}.png")
 	@Produces("image/png")
 	public Response getPotentialFieldImageForTank(@PathParam(value="gameId") String gameId,
 													  @PathParam(value="teamId") String teamId,
