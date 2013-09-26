@@ -50,10 +50,20 @@ public class PFAgent extends AbstractAgent{
 		rejector.setPoint(obstacle.getCenterPoint());
 		rejector.setRadius(obstacle.getRadius());
 		rejector.setSpread(30f);
-		rejector.setStrength(1.25f);
+		rejector.setStrength(1f);
 		potentialFields.add(rejector);
 
-		//TODO add a tangential here as well
+		//Also create a tangential
+		PotentialField tangential = new PotentialField();
+		tangential.setId(UUID.randomUUID().toString());
+		tangential.setType("tangential");
+		tangential.setPoint(obstacle.getCenterPoint());
+		tangential.setRadius(obstacle.getRadius() + obstacle.getRadius() * 0.1f);
+		tangential.setSpread(obstacle.getRadius() + obstacle.getRadius() * 0.3f);
+		tangential.setStrength(0.9f);
+		potentialFields.add(tangential);
+		
+		// TODO Put tangentials on enemy tanks with a close radius (to avoid getting stuck)
 	}
 
 	private static Point evaluateAttractor(float agentX, float agentY, PotentialField attractor){
@@ -85,6 +95,42 @@ public class PFAgent extends AbstractAgent{
 			return new Point(0.0f, 0.0f);
 		//You should feel more pressure the closer you get
 		return new Point((float)(-1.0f * rejector.getStrength() * ((rejector.getSpread() + rejector.getRadius() - distance) / rejector.getSpread()) * Math.cos(angle)), (float)(-1.0f * rejector.getStrength() * ((rejector.getSpread() + rejector.getRadius() - distance) / rejector.getSpread()) * Math.sin(angle)));
+	}
+	
+	private static Point evaluateTangential(float agentX, float agentY, PotentialField tang){
+		float distance = (float)Math.sqrt(Math.pow(tang.getPoint().getX() - agentX, 2.0d) +
+				Math.pow(tang.getPoint().getY() - agentY, 2.0d));
+		
+		// Same as rejector, but modify angle by 90 degrees
+		float ninety = 1.57079633f; // add = counterclockwise, subtract = clockwise
+		float angle = (float)Math.atan2(tang.getPoint().getY() - agentY, tang.getPoint().getX() - agentX);
+		angle -= ninety;
+//		int degrees = (int)((angle * 180f)/Math.PI);
+//		
+//		// Get degrees between 0 and 360
+//		while (degrees > 360)
+//			degrees -= 360;
+//		while (degrees < 0)
+//			degrees += 360;
+//		
+//		// Calculate quadrant
+//		if (degrees >= 0 && degrees < 45 ||
+//				degrees >= 90 && degrees < 135 ||
+//				degrees >= 180 && degrees < 225 ||
+//				degrees >= 270 && degrees <= 360) {
+//			angle += ninety;
+//		} else {
+//			angle -= ninety;
+//		}
+
+		//Get the freak outta here
+		if(distance < tang.getRadius())
+			return new Point((float)(-1.0f * tang.getStrength() * Math.cos(angle)), (float)(-1.0f * tang.getStrength() *Math.sin(angle)));
+		//Don't worry about me, you're somewhere out there
+		if(distance > (tang.getSpread() + tang.getRadius()))
+			return new Point(0.0f, 0.0f);
+		//You should feel more pressure the closer you get
+		return new Point((float)(-1.0f * tang.getStrength() * ((tang.getSpread() + tang.getRadius() - distance) / tang.getSpread()) * Math.cos(angle)), (float)(-1.0f * tang.getStrength() * ((tang.getSpread() + tang.getRadius() - distance) / tang.getSpread()) * Math.sin(angle)));
 	}
 
 	protected Point evaluate(){
@@ -140,7 +186,11 @@ public class PFAgent extends AbstractAgent{
 				vector.setX(vector.getX() + vec.getX());
 				vector.setY(vector.getY() + vec.getY());
 			}
-			//TODO Tangers
+			else if (potentialField.getType().equals("tangential") && (type.equals("tangentials") || type.equals("all"))) {
+				Point vec = evaluateTangential(x, y, potentialField);
+				vector.setX(vector.getX() + vec.getX());
+				vector.setY(vector.getY() + vec.getY());
+			}
 		}
 
 		return vector;
