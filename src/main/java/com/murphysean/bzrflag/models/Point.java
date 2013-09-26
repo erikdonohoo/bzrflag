@@ -7,8 +7,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class Point{
-	protected Float x;
-	protected Float y;
+	protected volatile float x;
+	protected volatile float y;
 
 	public Point(){
 		x = 0.0f;
@@ -20,39 +20,45 @@ public class Point{
 		this.y = y;
 	}
 
-	public Float getX(){
+	public synchronized Float getX(){
 		return x;
 	}
 
-	public void setX(Float x){
+	public synchronized void setX(float x){
 		this.x = x;
 	}
 
-	public Float getY(){
+	public synchronized Float getY(){
 		return y;
 	}
 
-	public void setY(Float y){
+	public synchronized void setY(float y){
 		this.y = y;
 	}
 
+	public synchronized Point setXY(float x, float y){
+		this.x = x;
+		this.y = y;
+		return this;
+	}
+
 	@Override
-	public boolean equals(Object o){
+	public synchronized boolean equals(Object o){
 		if(this == o) return true;
 		if(o == null || getClass() != o.getClass()) return false;
 
 		Point point = (Point) o;
 
-		if(x != null ? !x.equals(point.x) : point.x != null) return false;
-		if(y != null ? !y.equals(point.y) : point.y != null) return false;
+		if(Float.compare(point.x, x) != 0) return false;
+		if(Float.compare(point.y, y) != 0) return false;
 
 		return true;
 	}
 
 	@Override
-	public int hashCode(){
-		int result = x != null ? x.hashCode() : 0;
-		result = 31 * result + (y != null ? y.hashCode() : 0);
+	public synchronized int hashCode(){
+		int result = (x != +0.0f ? Float.floatToIntBits(x) : 0);
+		result = 31 * result + (y != +0.0f ? Float.floatToIntBits(y) : 0);
 		return result;
 	}
 }

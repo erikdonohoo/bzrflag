@@ -10,44 +10,45 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class PIDController{
 	/** Proportional gain, a tuning parameter**/
-	protected Float kp;
+	protected volatile float kp;
 	/** Integral gain, a tuning parameter**/
-	protected Float ki;
+	protected volatile float ki;
 	/** Derivative gain, a tuning parameter**/
-	protected Float kd;
+	protected volatile float kd;
 
-	protected Float setPoint;
+	protected volatile float setPoint;
 
-	protected Float prevError = 0.0f;
-	protected Long prevMeasuredAt;
-	protected Float integral = 0.0f;
+	protected volatile float prevError = 0.0f;
+	protected volatile long prevMeasuredAt;
+	protected volatile float integral = 0.0f;
 
 	public PIDController(){
 		kp = 1.0f;
 		ki = 0.0f;
 		kd = 1.0f;
+
+		prevMeasuredAt = 0;
 	}
 
-	public PIDController(Float kp, Float ki, Float kd){
+	public PIDController(float kp, float ki, float kd){
 		this.kp = kp;
 		this.ki = ki;
 		this.kd = kd;
+
+		prevMeasuredAt = 0;
 	}
 
-	public Float calculate(Float measuredValue){
-		if(setPoint == null)
-			throw new RuntimeException("Set Point must not be null");
-
+	public synchronized float calculate(float measuredValue){
 		Long measuredAt = new Date().getTime();
-		if(prevMeasuredAt == null)
+		if(prevMeasuredAt == 0l)
 			prevMeasuredAt = measuredAt - 1000;
 		long timeDiff = measuredAt - prevMeasuredAt;
 
-		Float error = setPoint - measuredValue;
+		float error = setPoint - measuredValue;
 		integral = integral + error * timeDiff;
-		Float derivative = (error - prevError) / timeDiff;
+		float derivative = (error - prevError) / timeDiff;
 
-		Float output = kp * error + ki * integral + kd * derivative;
+		float output = kp * error + ki * integral + kd * derivative;
 
 		prevError = error;
 		prevMeasuredAt = measuredAt;
@@ -55,59 +56,59 @@ public class PIDController{
 		return output;
 	}
 
-	public Float getKp(){
+	public synchronized float getKp(){
 		return kp;
 	}
 
-	public void setKp(Float kp){
+	public synchronized void setKp(float kp){
 		this.kp = kp;
 	}
 
-	public Float getKi(){
+	public synchronized float getKi(){
 		return ki;
 	}
 
-	public void setKi(Float ki){
+	public synchronized void setKi(float ki){
 		this.ki = ki;
 	}
 
-	public Float getKd(){
+	public synchronized float getKd(){
 		return kd;
 	}
 
-	public void setKd(Float kd){
+	public synchronized void setKd(float kd){
 		this.kd = kd;
 	}
 
-	public Float getSetPoint(){
+	public synchronized float getSetPoint(){
 		return setPoint;
 	}
 
-	public void setSetPoint(Float setPoint){
+	public synchronized void setSetPoint(float setPoint){
 		this.setPoint = setPoint;
 	}
 
-	public Float getPrevError(){
+	public synchronized float getPrevError(){
 		return prevError;
 	}
 
-	public void setPrevError(Float prevError){
+	public synchronized void setPrevError(Float prevError){
 		this.prevError = prevError;
 	}
 
-	public Long getPrevMeasuredAt(){
+	public synchronized long getPrevMeasuredAt(){
 		return prevMeasuredAt;
 	}
 
-	public void setPrevMeasuredAt(Long prevMeasuredAt){
+	public synchronized void setPrevMeasuredAt(long prevMeasuredAt){
 		this.prevMeasuredAt = prevMeasuredAt;
 	}
 
-	public Float getIntegral(){
+	public synchronized float getIntegral(){
 		return integral;
 	}
 
-	public void setIntegral(Float integral){
+	public synchronized void setIntegral(float integral){
 		this.integral = integral;
 	}
 }

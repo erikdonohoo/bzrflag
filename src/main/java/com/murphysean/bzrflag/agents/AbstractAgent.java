@@ -17,10 +17,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 		@JsonSubTypes.Type(value=PFAgent.class, name="pf")
 })
 public abstract class AbstractAgent extends Tank implements Agent{
-	protected String type;
-	protected Float desiredSpeed;
-	protected Float desiredAngularVelocity;
-	protected Boolean desiredTriggerStatus;
+	protected volatile String type;
+	protected volatile float desiredSpeed;
+	protected volatile float desiredAngularVelocity;
+	protected volatile boolean desiredTriggerStatus;
 
 	public AbstractAgent(){
 		type = "abstract";
@@ -29,34 +29,34 @@ public abstract class AbstractAgent extends Tank implements Agent{
 		desiredTriggerStatus = false;
 	}
 
-	public String getType(){
+	public synchronized String getType(){
 		return type;
 	}
 
-	public Float getDesiredSpeed(){
+	public synchronized float getDesiredSpeed(){
 		return desiredSpeed;
 	}
 
-	public void setDesiredSpeed(Float desiredSpeed){
+	public synchronized void setDesiredSpeed(float desiredSpeed){
 		this.desiredSpeed = desiredSpeed;
 	}
 
-	public Float getDesiredAngularVelocity(){
+	public synchronized float getDesiredAngularVelocity(){
 		return desiredAngularVelocity;
 	}
 
-	public void setDesiredAngularVelocity(Float desiredAngularVelocity){
+	public synchronized void setDesiredAngularVelocity(float desiredAngularVelocity){
 		this.desiredAngularVelocity = desiredAngularVelocity;
 	}
 
-	public Boolean getDesiredTriggerStatus(){
+	public synchronized boolean getDesiredTriggerStatus(){
 		boolean ret = desiredTriggerStatus;
 		if(ret)
 			desiredTriggerStatus = false;
 		return ret;
 	}
 
-	public void setDesiredTriggerStatus(Boolean desiredTriggerStatus){
+	public synchronized void setDesiredTriggerStatus(boolean desiredTriggerStatus){
 		this.desiredTriggerStatus = desiredTriggerStatus;
 	}
 }

@@ -34,15 +34,15 @@ public class PFAgent extends AbstractAgent{
 		potentialFields = new ArrayList<>();
 	}
 
-	public void setMyTeam(Team myTeam){
+	public synchronized void setMyTeam(Team myTeam){
 		this.myTeam = myTeam;
 	}
 
-	public void addOtherTeam(Team otherTeam){
+	public synchronized void addOtherTeam(Team otherTeam){
 		otherTeams.add(otherTeam);
 	}
 
-	public void addObstacle(Obstacle obstacle){
+	public synchronized void addObstacle(Obstacle obstacle){
 		//Turn this into a rejector
 		PotentialField rejector = new PotentialField();
 		rejector.setId(UUID.randomUUID().toString());
@@ -56,7 +56,7 @@ public class PFAgent extends AbstractAgent{
 		//TODO add a tangential here as well
 	}
 
-	private Point evaluateAttractor(Float agentX, Float agentY, PotentialField attractor){
+	private static Point evaluateAttractor(float agentX, float agentY, PotentialField attractor){
 		//Find the distance between the agent and the goal
 		float distance = (float)Math.sqrt(Math.pow(attractor.getPoint().getX() - agentX, 2.0d) +
 				Math.pow(attractor.getPoint().getY() - agentY, 2.0d));
@@ -72,7 +72,7 @@ public class PFAgent extends AbstractAgent{
 		return new Point((float)(attractor.getStrength() * ((distance - attractor.getRadius()) / attractor.getSpread()) * Math.cos(angle)), (float)(attractor.getStrength() * ((distance - attractor.getRadius()) / attractor.getSpread()) * Math.sin(angle)));
 	}
 
-	private Point evaluateRejector(Float agentX, Float agentY, PotentialField rejector){
+	private static Point evaluateRejector(float agentX, float agentY, PotentialField rejector){
 		float distance = (float)Math.sqrt(Math.pow(rejector.getPoint().getX() - agentX, 2.0d) +
 				Math.pow(rejector.getPoint().getY() - agentY, 2.0d));
 		float angle = (float)Math.atan2(rejector.getPoint().getY() - agentY, rejector.getPoint().getX() - agentX);
@@ -91,7 +91,7 @@ public class PFAgent extends AbstractAgent{
 		return evaluate(position.getX(), position.getY(), "all");
 	}
 
-	public Point evaluate(Float x, Float y, String type){
+	public synchronized Point evaluate(float x, float y, String type){
 		Point vector = new Point(0.0f, 0.0f);
 
 		if(flag.equals("-") && attractor != null && attractor.getPoint().equals(myTeam.getFlag().getPoint())){
@@ -146,8 +146,9 @@ public class PFAgent extends AbstractAgent{
 		return vector;
 	}
 
+	/**Allows all updates to be applied atomically*/
 	@Override
-	public void update(String status, Integer shotsAvailable, Float timeToReload, String flag, Float positionX, Float positionY, Float velocityX, Float velocityY, Float angle, Float angleVelocity){
+	public synchronized void update(String status, int shotsAvailable, float timeToReload, String flag, float positionX, float positionY, float velocityX, float velocityY, float angle, float angleVelocity){
 		//Invoke the default behavior
 		super.update(status, shotsAvailable, timeToReload, flag, positionX, positionY, velocityX, velocityY, angle, angleVelocity);
 
@@ -166,25 +167,9 @@ public class PFAgent extends AbstractAgent{
 	}
 
 	@Override
-	public Boolean getDesiredTriggerStatus(){
-		if(timeToReload != null && timeToReload <= 0.0f)
+	public synchronized boolean getDesiredTriggerStatus(){
+		if(timeToReload <= 0.0f)
 			return true;
 		return false;
-	}
-
-	public PotentialField getAttractor(){
-		return attractor;
-	}
-
-	public List<PotentialField> getPotentialFields(){
-		return potentialFields;
-	}
-
-	public PIDController getAngleController(){
-		return angleController;
-	}
-
-	public void setAngleController(PIDController angleController){
-		this.angleController = angleController;
 	}
 }

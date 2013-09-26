@@ -35,7 +35,7 @@ public class DumbAgent extends AbstractAgent{
 		shootSeconds = SHOOT_MIN + (float)(Math.random() * (SHOOT_MAX - SHOOT_MIN));
 	}
 
-	public void setPositionAngle(Float positionX, Float positionY, Float angle){
+	public void setPositionAngle(float positionX, float positionY, float angle){
 		Date now = new Date();
 		if(state == 0){
 			if((now.getTime() - startState.getTime()) >= (movingSeconds * 1000)){
