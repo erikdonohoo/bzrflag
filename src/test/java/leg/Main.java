@@ -8,11 +8,12 @@ import com.murphysean.bzrflag.models.*;
 
 import java.util.Date;
 import java.util.Iterator;
+import java.util.UUID;
 
 public class Main{
 
     public static void main(String[] args){
-		try(Game bzrServer = new Game("localhost", 58928)){
+		try(Game bzrServer = new Game(UUID.randomUUID().toString(), "localhost", 58928)){
 			initializeMyTeam(bzrServer, "pfagent");
 
 			long its = 1;

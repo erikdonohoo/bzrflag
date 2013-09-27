@@ -33,7 +33,6 @@ public class GameController implements Runnable{
 		this.gameId = gameId;
 		this.host = host;
 		this.port = port;
-		game = new Game();
 	}
 
 	@Override
@@ -41,7 +40,7 @@ public class GameController implements Runnable{
 		if(host == null || port == null)
 			return;
 
-		try(Game gameRef = new Game(host, port)){
+		try(Game gameRef = new Game(gameId, host, port)){
 			this.game = gameRef;
 			initializeMyTeam(gameRef, "pfagent");
 
@@ -117,7 +116,7 @@ public class GameController implements Runnable{
 		}
 	}
 
-	public synchronized Game getGame(){
+	public Game getGame(){
 		return game;
 	}
 

@@ -24,27 +24,27 @@ public class Game implements AutoCloseable{
 
 	//Constants
 	protected String teamColor;
-	protected Integer worldSize;
-	protected Float tankAngVel;
-	protected Float tankLength;
-	protected Float tankRadius;
-	protected Float tankSpeed;
+	protected int worldSize;
+	protected float tankAngVel;
+	protected float tankLength;
+	protected float tankRadius;
+	protected float tankSpeed;
 	protected String tankAlive;
 	protected String tankDead;
-	protected Float linearAccel;
-	protected Float angularAccel;
-	protected Float tankWidth;
-	protected Float shotRadius;
-	protected Float shotRange;
-	protected Float shotSpeed;
-	protected Float flagRadius;
-	protected Float explodeTime;
-	protected Float truePositive;
-	protected Float trueNegative;
+	protected float linearAccel;
+	protected float angularAccel;
+	protected float tankWidth;
+	protected float shotRadius;
+	protected float shotRange;
+	protected float shotSpeed;
+	protected float flagRadius;
+	protected float explodeTime;
+	protected float truePositive;
+	protected float trueNegative;
 
 	//Game Time
-	protected Float timeElapsed;
-	protected Float timeLimit;
+	protected float timeElapsed;
+	protected float timeLimit;
 
 	//Internal Objects
 	protected Team team;
@@ -53,7 +53,7 @@ public class Game implements AutoCloseable{
 
 	//Communication Objects
 	protected String host;
-	protected Integer port;
+	protected int port;
 	protected transient Socket socket;
 	protected transient BufferedReader bufferedReader;
 	protected transient BufferedWriter bufferedWriter;
@@ -62,7 +62,8 @@ public class Game implements AutoCloseable{
 		gameState = "instantiated";
 	}
 
-	public Game(String host, int port){
+	public Game(String id, String host, int port){
+		this.id = id;
 		this.host = host;
 		this.port = port;
 		try{
@@ -531,18 +532,18 @@ public class Game implements AutoCloseable{
 			//Probably won't be making this call async
 		}
 
-		public void readFlag(String teamColor, String possessingTeamColor, Float x, Float y){
+		public void readFlag(String teamColor, String possessingTeamColor, float x, float y){
 			for(Team team : teams){
 				if(team.getColor().equals(teamColor)){
 					team.getFlag().setPossessingTeamColor(possessingTeamColor);
-					team.getFlag().getPoint().setX(Float.valueOf(x));
-					team.getFlag().getPoint().setY(Float.valueOf(y));
+					team.getFlag().getPoint().setX(x);
+					team.getFlag().getPoint().setY(y);
 				}
 
 			}
 		}
 
-		public void readScore(String teamColor, String otherTeamColor, Integer score){
+		public void readScore(String teamColor, String otherTeamColor, int score){
 			for(Team team : teams){
 				if(team.getColor().equals(teamColor)){
 					team.setScore(otherTeamColor, score);
@@ -550,7 +551,7 @@ public class Game implements AutoCloseable{
 			}
 		}
 
-		public void readShot(Float x, Float y, Float vx, Float vy){
+		public void readShot(float x, float y, float vx, float vy){
 			Shot shot = new Shot();
 			shot.setPoint(new Point(x, y));
 			shot.setVelocity(new Point(vx, vy));
@@ -562,12 +563,12 @@ public class Game implements AutoCloseable{
 			//TODO The reaction to shots should be reflexive, meaning that it should be fast and not blocked by other 'thoughts', 'actions'
 		}
 
-		public void readMyTank(Integer index, String callsign, String status, Integer shotsAvailable, Float timeToReload, String flag, Float x, Float y, Float angle, Float vx, Float vy, Float anglevel){
+		public void readMyTank(int index, String callsign, String status, int shotsAvailable, float timeToReload, String flag, float x, float y, float angle, float vx, float vy, float anglevel){
 			Tank tank = team.getTanks().get(index);
 			tank.update(status, shotsAvailable, timeToReload, flag, x, y, vx, vy, angle, anglevel);
 		}
 
-		public void readOtherTank(String callsign, String color, String status, String flag, Float x, Float y, Float angle){
+		public void readOtherTank(String callsign, String color, String status, String flag, float x, float y, float angle){
 			for(Team team : teams){
 				if(team.getColor().equals(color)){
 					int index = Integer.valueOf(callsign.replaceAll("\\D", ""));
@@ -660,23 +661,23 @@ public class Game implements AutoCloseable{
 		return teamColor;
 	}
 
-	public Integer getWorldSize(){
+	public int getWorldSize(){
 		return worldSize;
 	}
 
-	public Float getTankAngVel(){
+	public float getTankAngVel(){
 		return tankAngVel;
 	}
 
-	public Float getTankLength(){
+	public float getTankLength(){
 		return tankLength;
 	}
 
-	public Float getTankRadius(){
+	public float getTankRadius(){
 		return tankRadius;
 	}
 
-	public Float getTankSpeed(){
+	public float getTankSpeed(){
 		return tankSpeed;
 	}
 
@@ -688,51 +689,51 @@ public class Game implements AutoCloseable{
 		return tankDead;
 	}
 
-	public Float getLinearAccel(){
+	public float getLinearAccel(){
 		return linearAccel;
 	}
 
-	public Float getAngularAccel(){
+	public float getAngularAccel(){
 		return angularAccel;
 	}
 
-	public Float getTankWidth(){
+	public float getTankWidth(){
 		return tankWidth;
 	}
 
-	public Float getShotRadius(){
+	public float getShotRadius(){
 		return shotRadius;
 	}
 
-	public Float getShotRange(){
+	public float getShotRange(){
 		return shotRange;
 	}
 
-	public Float getShotSpeed(){
+	public float getShotSpeed(){
 		return shotSpeed;
 	}
 
-	public Float getFlagRadius(){
+	public float getFlagRadius(){
 		return flagRadius;
 	}
 
-	public Float getExplodeTime(){
+	public float getExplodeTime(){
 		return explodeTime;
 	}
 
-	public Float getTruePositive(){
+	public float getTruePositive(){
 		return truePositive;
 	}
 
-	public Float getTrueNegative(){
+	public float getTrueNegative(){
 		return trueNegative;
 	}
 
-	public Float getTimeElapsed(){
+	public float getTimeElapsed(){
 		return timeElapsed;
 	}
 
-	public Float getTimeLimit(){
+	public float getTimeLimit(){
 		return timeLimit;
 	}
 
@@ -752,7 +753,7 @@ public class Game implements AutoCloseable{
 		return host;
 	}
 
-	public Integer getPort(){
+	public int getPort(){
 		return port;
 	}
 }

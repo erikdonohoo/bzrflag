@@ -21,11 +21,17 @@ public class Team{
 	protected List<Tank> tanks;
 	protected Map<String, Integer> score;
 
+	public Team(){
+
+	}
+
 	public Team(int playerCount, String color){
 		this.color = color;
 		this.playerCount = playerCount;
 		base = new Base();
+		base.setTeamColor(color);
 		flag = new Flag();
+		flag.setTeamColor(color);
 
 		tanks = new ArrayList<>(playerCount);
 		for(int i = 0; i < playerCount; i++){
