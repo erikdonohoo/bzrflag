@@ -134,9 +134,9 @@ public class BZRFlagInputCommunicator implements Runnable{
 		//TODO The reaction to shots should be reflexive, meaning that it should be fast and not blocked by other 'thoughts', 'actions'
 	}
 
-	public void readMyTank(int index, String callsign, String status, int shotsAvailable, float timeToReload, String flag, float x, float y, float angle, float vx, float vy, float anglevel){
-		Tank tank = game.getTeam().getTanks().get(index);
-		tank.update(status, shotsAvailable, timeToReload, flag, x, y, vx, vy, angle, anglevel);
+	public void readMyTank(int tankIndex, String callsign, String status, int shotsAvailable, float timeToReload, String flag, float x, float y, float angle, float vx, float vy, float vangle){
+		Tank tank = game.getTeam().getTanks().get(tankIndex);
+		tank.update(status, shotsAvailable, timeToReload, flag, x, y, vx, vy, angle, vangle);
 	}
 
 	public void readOtherTank(String callsign, String color, String status, String flag, float x, float y, float angle){
