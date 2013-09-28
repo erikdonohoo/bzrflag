@@ -5,6 +5,7 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,18 +23,19 @@ public class Team{
 	protected Map<String, Integer> score;
 
 	public Team(){
-
+		score = new HashMap<>();
+		base = new Base();
+		flag = new Flag();
+		tanks = new ArrayList<>();
 	}
 
 	public Team(int playerCount, String color){
+		this();
 		this.color = color;
 		this.playerCount = playerCount;
-		base = new Base();
 		base.setTeamColor(color);
-		flag = new Flag();
 		flag.setTeamColor(color);
 
-		tanks = new ArrayList<>(playerCount);
 		for(int i = 0; i < playerCount; i++){
 			Tank tank = new Tank();
 			tank.setId(i);
@@ -44,15 +46,15 @@ public class Team{
 	}
 
 	public Team(String serverString){
+		this();
 		String[] parts = serverString.split("\\s+");
 		id = parts[1];
 		color = parts[1];
 		playerCount = Integer.valueOf(parts[2]);
 
-		base = new Base();
-		flag = new Flag();
+		base.setTeamColor(color);
+		flag.setTeamColor(color);
 
-		tanks = new ArrayList<>(playerCount);
 		for(int i = 0; i < playerCount; i++){
 			Tank tank = new Tank();
 			tank.setId(i);

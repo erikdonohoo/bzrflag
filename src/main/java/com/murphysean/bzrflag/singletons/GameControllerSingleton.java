@@ -1,4 +1,4 @@
-package com.murphysean.bzrflag;
+package com.murphysean.bzrflag.singletons;
 
 import com.murphysean.bzrflag.controllers.GameController;
 
@@ -34,7 +34,11 @@ public class GameControllerSingleton{
 	public synchronized void removeGameController(String key){
 		if(gameControllerMap.containsKey(key)){
 			GameController gameController = gameControllerMap.get(key);
-			gameController.getGame().endGame();
+			try{
+				gameController.close();
+			}catch(Exception e){
+				throw new RuntimeException(e);
+			}
 			gameControllerMap.remove(key);
 		}
 	}

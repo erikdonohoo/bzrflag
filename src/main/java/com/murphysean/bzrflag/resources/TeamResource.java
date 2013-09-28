@@ -1,6 +1,6 @@
 package com.murphysean.bzrflag.resources;
 
-import com.murphysean.bzrflag.GameControllerSingleton;
+import com.murphysean.bzrflag.singletons.GameControllerSingleton;
 import com.murphysean.bzrflag.controllers.GameController;
 import com.murphysean.bzrflag.models.Team;
 
