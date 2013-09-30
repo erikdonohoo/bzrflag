@@ -5,7 +5,11 @@
 
     <display-name>BZRFlag Web Server Client</display-name>
     <description>A webserver client to the python bzrflag game.</description>
-    
+
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+	</welcome-file-list>
+
 	<metadata-complete>false</metadata-complete>
 	
 	<session-config>
@@ -20,6 +24,6 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>Jersey REST Service</servlet-name>
-		<url-pattern>/*</url-pattern>
+		<url-pattern>/api/*</url-pattern>
 	</servlet-mapping>
 </web-app>
