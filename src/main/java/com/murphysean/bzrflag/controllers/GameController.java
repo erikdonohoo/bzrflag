@@ -74,6 +74,9 @@ public class GameController implements Runnable, AutoCloseable{
 			readBases();
 			readFlags();
 
+			//Make sure the threads start
+			game.setState("playing");
+
 			//Spin out threads to handle async
 			BZRFlagInputCommunicator inputCommunicator = new BZRFlagInputCommunicator(this);
 			Thread inputThread = new Thread(inputCommunicator, "bzrflagInputCommunicator");
@@ -81,8 +84,6 @@ public class GameController implements Runnable, AutoCloseable{
 			BZRFlagOutputCommunicator outputCommunicator = new BZRFlagOutputCommunicator(this);
 			Thread outputThread = new Thread(outputCommunicator, "bzrflagOutputCommunicator");
 			outputThread.start();
-
-			game.setState("playing");
 
 			initializeMyTeam(game, "pfagent");
 
@@ -95,13 +96,18 @@ public class GameController implements Runnable, AutoCloseable{
 				if(timeDiff < 10)
 					Thread.sleep(10 - timeDiff);
 
+				//TODO Take a little time off if the bufferes are full
+				//while(socket.getInputStream().available() > 2048)
+				//	Thread.sleep(10);
+
 				//Send off requests for information
 				outputCommunicator.requestMyTanks();
-				//TODO OccGrids
 				outputCommunicator.requestShots();
 				//Read Flags
-				if(its % 50 == 0)
+				if(its % 50 == 0){
+					//TODO outputCommunicator.requestOccGrids();
 					outputCommunicator.requestFlags();
+				}
 				//Read Other Tanks
 				if(its % 2 == 0)
 					outputCommunicator.requestOtherTanks();
@@ -120,6 +126,7 @@ public class GameController implements Runnable, AutoCloseable{
 
 			close();
 		}catch(Exception e){
+			game.setState("errored");
 			throw new RuntimeException(e);
 		}
 	}

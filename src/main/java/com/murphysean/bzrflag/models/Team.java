@@ -1,6 +1,5 @@
 package com.murphysean.bzrflag.models;
 
-import com.murphysean.bzrflag.agents.PFAgent;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 import javax.xml.bind.annotation.XmlRootElement;

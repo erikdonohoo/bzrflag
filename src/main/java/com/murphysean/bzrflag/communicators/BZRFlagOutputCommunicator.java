@@ -61,7 +61,11 @@ public class BZRFlagOutputCommunicator implements Runnable{
 		blockingQueue.offer("timer");
 	}
 
-
+	public void requestOccGrids(){
+		for(int i = 0; i < game.getTeam().getTanks().size(); i++){
+			blockingQueue.offer("occgrid " + i);
+		}
+	}
 
 	public void updateMyTeam(){
 		for(Tank tank : game.getTeam().getTanks()){

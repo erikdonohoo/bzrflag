@@ -1,6 +1,8 @@
 package com.murphysean.bzrflag.communicators;
 
 import com.murphysean.bzrflag.controllers.GameController;
+import com.murphysean.bzrflag.events.OccGridEvent;
+import com.murphysean.bzrflag.interfaces.Commander;
 import com.murphysean.bzrflag.models.*;
 
 import java.io.BufferedReader;
@@ -17,6 +19,10 @@ public class BZRFlagInputCommunicator implements Runnable{
 	private Game game;
 	private GameController gameController;
 	private BufferedReader bufferedReader;
+
+	private Point occGridPoint;
+	private Point occGridSize;
+	private int occGridLine;
 
 	public BZRFlagInputCommunicator(GameController gameController){
 		this.gameController = gameController;
@@ -52,6 +58,12 @@ public class BZRFlagInputCommunicator implements Runnable{
 	}
 
 	public void readResponse(String responseLine){
+		if(responseLine.startsWith("0") || responseLine.startsWith("1")){
+			readOccGrid(responseLine);
+			return;
+		}
+
+
 		String[] parts = responseLine.split("\\s+");
 
 		switch(parts[0]){
@@ -86,21 +98,33 @@ public class BZRFlagInputCommunicator implements Runnable{
 			case "constant":
 				readConstant(parts[1], parts[2]);
 				break;
+			case "at":
+				String[] ints = parts[1].split(",");
+				int x = Integer.valueOf(ints[0]);
+				int y = Integer.valueOf(ints[1]);
+				occGridPoint = new Point(x,y);
+				break;
+			case "size":
+				String[] sizes = parts[1].split("x");
+				int length = Integer.valueOf(sizes[0]);
+				int height = Integer.valueOf(sizes[1]);
+				occGridSize = new Point(length, height);
+				break;
 			default:
-				throw new RuntimeException("Unknown Response");
+				throw new RuntimeException("Unknown Response: " + responseLine);
 		}
 	}
 
 	public void readTeam(String color, Integer playerCount){
-		//Probably won't be making this call async
+		throw new RuntimeException("Method Not Implemented");
 	}
 
 	public void readObstacle(String responseLine){
-		//Probably won't be making this call async
+		throw new RuntimeException("Method Not Implemented");
 	}
 
 	public void readBase(String responseLine){
-		//Probably won't be making this call async
+		throw new RuntimeException("Method Not Implemented");
 	}
 
 	public void readFlag(String teamColor, String possessingTeamColor, float x, float y){
@@ -148,6 +172,17 @@ public class BZRFlagInputCommunicator implements Runnable{
 				break;
 			}
 		}
+	}
+
+	public void readOccGrid(String line){
+		int x = Math.round(occGridPoint.getX()) + occGridLine;
+		int y = Math.round(occGridPoint.getY());
+		OccGridEvent event = new OccGridEvent(x,y,line);
+
+		if(game.getTeam() instanceof Commander)
+			((Commander)game.getTeam()).sendOccGridEvent(event);
+
+		occGridLine++;
 	}
 
 	public void readConstant(String name, String value){
