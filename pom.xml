@@ -201,7 +201,7 @@
 					<url>http://localhost:8080/manager/text</url>
 					<server>localhost</server>
 					<!-- default path is /${project.artifactId}
-					<path>/</path>-->
+					<path>bzrflag/</path>-->
 					<tag>${project.name}-${project.version}</tag>
 					<update>true</update>
 				</configuration>
