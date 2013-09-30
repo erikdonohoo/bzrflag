@@ -1,6 +1,6 @@
 angular.module("BZRFlag").factory("Backend", [function(){
 
-	var prefix = "http://localhost:8080/bzrflag";
+	var prefix = "http://localhost:8080/bzrflag/api";
 
 	return {
 
