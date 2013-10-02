@@ -1,0 +1,26 @@
+<div class="container">
+	<div>
+		<h3><a ng-href="#/games/{{data.gameId}}">Back to Game</a></h3>
+		<div class="row">
+			<div class="form-group col-md-3">
+				<label for="host">Visual Multiplier</label>
+				<input ng-model="data.visualMultiplier" type="text" class="form-control">
+			</div>
+			<div class="form-group col-md-3">
+				<label for="host">Number of Steps</label>
+				<input ng-model="data.numSteps" type="text" class="form-control">
+			</div>
+			<div class="form-group col-md-3">
+				<label for="host">Type</label>
+				<input ng-model="data.type" type="text" class="form-control">
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6">
+			<img class="img-responsive" ng-src="http://localhost:8080/bzrflag/api/games/{{data.gameId}}/teams/me/tanks/{{data.tankId}}.png?visualMultiplier={{data.visualMultiplier}}&numSteps={{data.numSteps}}&type={{data.type}}" />
+		</div>
+		<div class="col-md-6">
+		</div>
+	</div>
+</div>

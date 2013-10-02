@@ -2,3 +2,32 @@ body {
 	background-image: url(../assets/img/textured_paper.png);
 	background-repeat: repeat;
 }
+.loading {
+	height:32px;
+}
+.table {
+	background:whitesmoke;
+	border-radius: 5px;
+	border:1px solid gray;
+	padding:10px 15px;
+}
+.table .game {
+	padding:15px 0;
+}
+.table .game:hover {
+	background:#ddd !important;
+	cursor:pointer;
+}
+.table .game + .game {
+	border-top:1px solid gray;
+}
+.bigger {
+	font-size:18px;
+}
+.tank:hover {
+	border:1px dashed black;
+}
+
+.capitalize {
+	text-transform: capitalize;
+}

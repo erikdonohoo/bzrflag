@@ -1,13 +1,18 @@
 angular.module("BZRFlag").controller("MainCtrl", 
-	["$scope", "Game", "$timeout", 
-	function($scope, Game, $timeout){
+	["$scope", "Game", "$timeout", "$location", 
+	function($scope, Game, $timeout, $location){
 
 	// Models
 	var data = {};
 
 	function refreshGames() {
-		data.games = Game.query();
+		data.loading = true;
+		data.games = Game.query(function(){
+			data.loading = false;
+		});
 	}
+
+	data.loading = false;
 
 	refreshGames();
 
@@ -16,10 +21,16 @@ angular.module("BZRFlag").controller("MainCtrl",
 	// Functions
 	$scope.createGame = function() {
 		Game.save($scope.data.newgame, function(){
+			data.loading = true;
+			$timeout(refreshGames, 1000);
+		});
+	}
+	$scope.viewGame = function(game) {
+		$location.path('games/' + game.id);
+	}
+	$scope.deleteGame = function(game) {
+		Game.delete({id: game.id}, function(){
 			refreshGames();
 		});
 	}
-
-	// Refresh games frequently
-	$timeout(refreshGames, 10000);
 }])

@@ -1,0 +1,14 @@
+<div class="container">
+	<h2 class="capitalize"><span style="color: {{data.game.teamColor}};">{{data.game.teamColor}} Team <small ng-click="refreshGame()" style="cursor:pointer;">Update</small></h2>
+	<h3>Tanks</h3>
+	<a ng-href="#/games/{{data.game.id}}/teams/me/tanks/{{tank.id}}" ng-repeat="tank in data.game.team.tanks track by tank.id">
+		<div class="row tank">
+			<div class="col-md-3">
+				<h4>Position: <small>{{tank.position.x}}, {{tank.position.y}}</small></h4>
+			</div>
+			<div class="col-md-3">
+				<h4>Status: <small>{{tank.status}}</small></h4>
+			</div>
+		</div>
+	</a>
+</div>
