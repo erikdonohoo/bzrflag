@@ -21,6 +21,46 @@
 			<img class="img-responsive" ng-src="http://localhost:8080/bzrflag/api/games/{{data.gameId}}/teams/me/tanks/{{data.tankId}}.png?visualMultiplier={{data.visualMultiplier}}&numSteps={{data.numSteps}}&type={{data.type}}" />
 		</div>
 		<div class="col-md-6">
+			<div class="row">
+				<a href=""><h4 ng-click="data.attractorOpen = !data.attractorOpen">Attractor</h4></a>
+				<div class="col-md-6" class="form-group" ng-repeat="(key, value) in data.tank.attractor" ng-show="data.attractorOpen">
+					<label class="capitalize">{{key}}</label>
+					<div ng-if="key == 'point'">
+						<div class="form-group" ng-repeat="(innerkey, innervalue) in value">
+							<label class="capitalize">{{innerkey}}</label>
+							<input  ng-model="innervalue" type="text" class="form-control">
+						</div>
+					</div>
+					<input ng-if="key != 'point'" ng-model="value" type="text" class="form-control" ng-disabled="key == 'id'">
+				</div>
+				<a href=""><h4 ng-click="data.rejectorOpen = !data.rejectorOpen">Rejectors</h4></a>
+				<div ng-repeat="rejector in data.fields.rejectors">
+					<div class="col-md-6" class="form-group" ng-repeat="(key, value) in rejector" ng-show="data.rejectorOpen">
+						<label class="capitalize">{{key}}</label>
+						<div ng-if="key == 'point'">
+							<div class="form-group" ng-repeat="(innerkey, innervalue) in value">
+								<label class="capitalize">{{innerkey}}</label>
+								<input  ng-model="innervalue" type="text" class="form-control">
+							</div>
+						</div>
+						<input ng-if="key != 'point'" ng-model="value" type="text" class="form-control" ng-disabled="key == 'id' || key == 'type'">
+					</div>
+				</div>
+				<a href=""><h4 ng-click="data.tangOpen = !data.tangOpen">Tangentials</h4></a>
+				<div ng-repeat="tang in data.fields.tangentials">
+					<div class="col-md-6" class="form-group" ng-repeat="(key, value) in tang" ng-show="data.tangOpen">
+						<label class="capitalize">{{key}}</label>
+						<div ng-if="key == 'point'">
+							<div class="form-group" ng-repeat="(innerkey, innervalue) in value">
+								<label class="capitalize">{{innerkey}}</label>
+								<input  ng-model="innervalue" type="text" class="form-control">
+							</div>
+						</div>
+						<input ng-if="key != 'point'" ng-model="value" type="text" class="form-control" ng-disabled="key == 'id' || key == 'type'">
+					</div>
+				</div>
+			</div>
+			<button class="btn btn-primary" ng-click="updateTank()">Update</button>
 		</div>
 	</div>
 </div>
