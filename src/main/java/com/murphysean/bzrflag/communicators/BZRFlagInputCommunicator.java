@@ -180,7 +180,7 @@ public class BZRFlagInputCommunicator implements Runnable{
 		OccGridEvent event = new OccGridEvent(x,y,line);
 
 		if(game.getTeam() instanceof Commander)
-			((Commander)game.getTeam()).sendOccGridEvent(event);
+			((Commander)game.getTeam()).sendBZRFlagEvent(event);
 
 		occGridLine++;
 	}

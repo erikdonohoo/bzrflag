@@ -226,22 +226,7 @@ public class TankResource{
 		//Bootstrap the pf agent by setting some of the transient properties
 		if(agent instanceof PFAgent){
 			PFAgent pfAgent = (PFAgent)agent;
-
-			Iterator<Team> iterator = game.getTeams().iterator();
-			while(iterator.hasNext()){
-				Team otherTeam = iterator.next();
-				if(otherTeam.getColor().equals(game.getTeam().getColor())){
-					pfAgent.setMyTeam(otherTeam);
-					continue;
-				}
-				pfAgent.addOtherTeam(otherTeam);
-			}
-			//TODO Figure out if it would be helpful to add in the obstacles here
-			//Might be useful if we just want to switch the type of the tank and so we would be hoping the server would do this
-			//Wouldn't be useful if we are trying to change some of the obstacles from the client to have different properties
-			/*for(Obstacle obstacle : game.getObstacles()){
-				pfAgent.addObstacle(obstacle);
-			}*/
+			pfAgent.setGame(game);
 		}
 
 		team.getTanks().set(tankId, agent);

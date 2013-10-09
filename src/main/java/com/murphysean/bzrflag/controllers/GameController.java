@@ -3,6 +3,7 @@ package com.murphysean.bzrflag.controllers;
 import com.murphysean.bzrflag.agents.AbstractAgent;
 import com.murphysean.bzrflag.agents.DumbAgent;
 import com.murphysean.bzrflag.agents.PFAgent;
+import com.murphysean.bzrflag.commanders.PFEvolutionCommander;
 import com.murphysean.bzrflag.communicators.BZRFlagInputCommunicator;
 import com.murphysean.bzrflag.communicators.BZRFlagOutputCommunicator;
 import com.murphysean.bzrflag.models.*;
@@ -85,7 +86,8 @@ public class GameController implements Runnable, AutoCloseable{
 			Thread outputThread = new Thread(outputCommunicator, "bzrflagOutputCommunicator");
 			outputThread.start();
 
-			initializeMyTeam(game, "pfagent");
+			PFEvolutionCommander commander = new PFEvolutionCommander();
+			commander.setGame(game);
 
 			long its = 1;
 			Date lastLoop = new Date();
@@ -135,33 +137,8 @@ public class GameController implements Runnable, AutoCloseable{
 		game.getTeam().getTanks().clear();
 		for(int i = 0; i < game.getTeam().getPlayerCount(); i++){
 			AbstractAgent agent = null;
-			switch(type){
-				case "dumbagent":
-					agent = new DumbAgent();
-					break;
-				case "pfagent":
-					PFAgent pfAgent = new PFAgent();
-					Iterator<Team> iterator = game.getTeams().iterator();
-					while(iterator.hasNext()){
-						Team team = iterator.next();
-						if(team.getColor().equals(game.getTeam().getColor())){
-							pfAgent.setMyTeam(team);
-							continue;
-						}
-						pfAgent.addOtherTeam(team);
-					}
-					for(Obstacle obstacle : game.getObstacles()){
-						pfAgent.addObstacle(obstacle);
-					}
-					agent = pfAgent;
-					break;
-				default:
-					throw new RuntimeException("Invalid Agent Type");
 
-			}
-			agent.setId(i);
-			agent.setCallsign(game.getTeam().getColor() + i);
-			agent.setTeamColor(game.getTeam().getColor());
+
 			game.getTeam().getTanks().add(agent);
 		}
 	}
@@ -277,8 +254,9 @@ public class GameController implements Runnable, AutoCloseable{
 					Team team = new Team(response);
 					if(team.getColor().equals(game.getTeamColor())){
 						game.setTeam(team);
+					}else{
+						game.getTeams().add(team);
 					}
-					game.getTeams().add(team);
 					response = bufferedReader.readLine();
 				}
 			}
@@ -337,6 +315,8 @@ public class GameController implements Runnable, AutoCloseable{
 	}
 
 	protected void assignBaseToTeam(Base base){
+		if(game.getTeam().getColor().equals(base.getTeamColor()))
+			game.getTeam().setBase(base);
 		for(Team team : game.getTeams()){
 			if(team.getColor().equals(base.getTeamColor()))
 				team.setBase(base);
@@ -368,6 +348,11 @@ public class GameController implements Runnable, AutoCloseable{
 
 	protected void assignFlagToTeam(String serverString){
 		String[] parts = serverString.split("\\s+");
+		if(game.getTeam().getColor().equals(parts[1])){
+			game.getTeam().getFlag().setPossessingTeamColor(parts[2]);
+			game.getTeam().getFlag().getPoint().setX(Float.valueOf(parts[3]));
+			game.getTeam().getFlag().getPoint().setY(Float.valueOf(parts[4]));
+		}
 		for(Team team : game.getTeams()){
 			if(team.getColor().equals(parts[1])){
 				team.getFlag().setPossessingTeamColor(parts[2]);

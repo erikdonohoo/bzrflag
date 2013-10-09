@@ -11,7 +11,7 @@ import java.util.List;
 public class Obstacle{
 	protected List<Point> points;
 	protected Point centerPoint;
-	protected Float radius;
+	protected float radius;
 
 	public Obstacle(){
 		points = new ArrayList<>();
@@ -47,7 +47,7 @@ public class Obstacle{
 		return centerPoint;
 	}
 
-	public Float getRadius(){
+	public float getRadius(){
 		return radius;
 	}
 
