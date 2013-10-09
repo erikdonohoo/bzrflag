@@ -11,9 +11,11 @@ import java.util.List;
 public class Base{
 	protected String teamColor;
 	protected List<Point> points;
+	protected Point centerPoint;
+	protected float radius;
 
 	public Base(){
-
+		points = new ArrayList<>();
 	}
 
 	public Base(String serverString){
@@ -32,6 +34,9 @@ public class Base{
 				points.add(point);
 			}
 		}
+
+		centerPoint = calculateCenterPoint();
+		radius = calculateMaxRadius();
 	}
 
 	public String getTeamColor(){
@@ -48,5 +53,39 @@ public class Base{
 
 	public void setPoints(List<Point> points){
 		this.points = points;
+	}
+
+	public Point getCenterPoint(){
+		return centerPoint;
+	}
+
+	public float getRadius(){
+		return radius;
+	}
+
+	private Point calculateCenterPoint(){
+		float runningX = 0.0f;
+		float runningY = 0.0f;
+		for(Point corner : points){
+			runningX += corner.getX();
+			runningY += corner.getY();
+		}
+
+		Point center = new Point();
+		center.setX(runningX / points.size());
+		center.setY(runningY / points.size());
+		return center;
+	}
+
+	private Float calculateMaxRadius(){
+		float maxRadius = 0.0f;
+		for(Point corner : points){
+			//Calculate the distance from the center to each corner
+			float distance = (float)Math.sqrt(Math.pow(corner.getX() - centerPoint.getX(), 2) + Math.pow(corner.getY() - centerPoint.getY(), 2));
+			if(distance > maxRadius)
+				maxRadius = distance;
+		}
+
+		return maxRadius;
 	}
 }

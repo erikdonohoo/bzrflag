@@ -1,64 +1,47 @@
 package com.murphysean.bzrflag.agents;
 
+import com.murphysean.bzrflag.commanders.PFEvolutionCommander;
 import com.murphysean.bzrflag.controllers.PIDController;
+import com.murphysean.bzrflag.events.BZRFlagEvent;
+import com.murphysean.bzrflag.interfaces.Commander;
 import com.murphysean.bzrflag.models.*;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 @XmlRootElement
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PFAgent extends AbstractAgent{
-	private transient Team myTeam;
-	private transient List<Team> otherTeams;
-	protected PotentialField attractor;
-	protected List<PotentialField> potentialFields;
-
+	@JsonIgnore
+	protected transient Game game;
 	protected PIDController angleController;
+	protected PFGene gene;
 
-	//The only state allowed is whether I have a flag or not, which can be garnered from the parent tank object
+	protected String goal;
+	protected PotentialField attractor;
+
+	protected transient Date startTime;
+	protected boolean retHome;
 
 	public PFAgent(){
+		//The commander give us one later, for now make sure I've actually got one
+		gene = PFGene.generateRandomPFGene();
+		goal = "wait";
+		retHome = false;
 		type = "pf";
 		angleController = new PIDController();
 		//I always desire my tank to be 0 degrees from my target rotation
 		angleController.setSetPoint(0.0f);
-
-		otherTeams = new ArrayList<>();
-		potentialFields = new ArrayList<>();
 	}
 
-	public synchronized void setMyTeam(Team myTeam){
-		this.myTeam = myTeam;
-	}
-
-	public synchronized void addOtherTeam(Team otherTeam){
-		otherTeams.add(otherTeam);
-	}
-
-	public synchronized void addObstacle(Obstacle obstacle){
-		//Turn this into a rejector
-		PotentialField rejector = new PotentialField();
-		rejector.setId(UUID.randomUUID().toString());
-		rejector.setType("rejector");
-		rejector.setPoint(obstacle.getCenterPoint());
-		rejector.setRadius(obstacle.getRadius());
-		rejector.setSpread(30f);
-		rejector.setStrength(1f);
-		potentialFields.add(rejector);
-
-		//Also create a tangential
-		PotentialField tangential = new PotentialField();
-		tangential.setId(UUID.randomUUID().toString());
-		tangential.setType("tangential");
-		tangential.setPoint(obstacle.getCenterPoint());
-		tangential.setRadius(obstacle.getRadius() + obstacle.getRadius() * 0.1f);
-		tangential.setSpread(obstacle.getRadius() + obstacle.getRadius() * 0.3f);
-		tangential.setStrength(0.9f);
-		potentialFields.add(tangential);
+	@JsonIgnore
+	public synchronized void setGame(Game game){
+		this.game = game;
 	}
 
 	private static Point evaluateAttractor(float agentX, float agentY, PotentialField attractor){
@@ -100,23 +83,6 @@ public class PFAgent extends AbstractAgent{
 		float ninety = 1.57079633f; // add = counterclockwise, subtract = clockwise
 		float angle = (float) Math.atan2(tang.getPoint().getY() - agentY, tang.getPoint().getX() - agentX);
 		angle -= ninety;
-//		int degrees = (int)((angle * 180f)/Math.PI);
-//		
-//		// Get degrees between 0 and 360
-//		while (degrees > 360)
-//			degrees -= 360;
-//		while (degrees < 0)
-//			degrees += 360;
-//		
-//		// Calculate quadrant
-//		if (degrees >= 0 && degrees < 45 ||
-//				degrees >= 90 && degrees < 135 ||
-//				degrees >= 180 && degrees < 225 ||
-//				degrees >= 270 && degrees <= 360) {
-//			angle += ninety;
-//		} else {
-//			angle -= ninety;
-//		}
 
 		//Get the freak outta here
 		if(distance < tang.getRadius())
@@ -132,36 +98,85 @@ public class PFAgent extends AbstractAgent{
 		return evaluate(position.getX(), position.getY(), "all");
 	}
 
+	private String decrepedGene = null;
 	public synchronized Point evaluate(float x, float y, String type){
-		Point vector = new Point(0.0f, 0.0f);
+		//If I have a goal to wait, my vector will be a zero point
+		if(goal.equals("wait"))
+			return new Point(0f,0f);
 
-		if(flag.equals("-") && attractor != null && attractor.getPoint().equals(myTeam.getFlag().getPoint())){
-			attractor = null;
-		}
-
-		if(flag.equals("-") && this.attractor == null){
-			//TODO Instead of looking at a random team, how about the team with the most points (besides myself)
-			int randomTeam = (int) Math.round(Math.random() * (otherTeams.size() - 1));
+		//If I've been gone above the threshold, set return home flag
+		if(startTime != null && (new Date().getTime() - startTime.getTime() > 280000)){
+			//Get a gene that works...
+			decrepedGene = gene.getGene();
+			gene = PFGene.getKnownWorkingPFGene();
+			retHome = true;
 			PotentialField attractor = new PotentialField();
-			attractor.setId(UUID.randomUUID().toString());
 			attractor.setType("attractor");
-			attractor.setPoint(otherTeams.get(randomTeam).getFlag().getPoint());
-			attractor.setRadius(1.0f);
-			attractor.setSpread(25f);
-			attractor.setStrength(1.0f);
+			attractor.setPoint(game.getTeam().getBase().getCenterPoint());
+			attractor.setRadius(gene.getAttRadius());
+			attractor.setSpread(gene.getAttSpread());
+			attractor.setStrength(gene.getAttStrength());
 			this.attractor = attractor;
 		}
 
-		if(!flag.equals("-")){
+
+		if(retHome){
+			//Calculate distance from me to my flag, if I'm home restart
+			float distance = (float) Math.sqrt(Math.pow(game.getTeam().getBase().getCenterPoint().getX() - position.getX(), 2.0d) +
+					Math.pow(game.getTeam().getBase().getCenterPoint().getY() - position.getY(), 2.0d));
+
+			if(distance < game.getTeam().getBase().getRadius()){
+				retHome = false;
+				//Notify commander of my lack of awesomeness through event
+				if(game.getTeam() instanceof Commander){
+					String note = game.getTeam().getColor() + "->" + goal + " TIMEOUT";
+					PFEvolutionCommander.PFTankEvent event = new PFEvolutionCommander.PFTankEvent(this, decrepedGene, 280000l, note);
+					((Commander)game.getTeam()).sendBZRFlagEvent(event);
+					decrepedGene = null;
+				}
+			}
+		}
+
+
+		Point vector = new Point(0.0f, 0.0f);
+
+		//I've just lost the flag (By returning it to my base) and I still have my base as my attractor
+		if(!retHome && flag.equals("-") && attractor != null && attractor.getPoint().equals(game.getTeam().getFlag().getPoint())){
+			attractor = null;
+		}
+
+		//I don't have a flag, and I don't have an attractor, I need something to go get
+		if(!retHome && flag.equals("-") && this.attractor == null && goal != null){
+			Date now = new Date();
+			//Notify commander of last time to get flag, Ask the commander for a new gene to test?
+			if(game.getTeam() instanceof Commander && (now.getTime() - startTime.getTime()) >= 500){
+				String note = game.getTeam().getColor() + "->" + goal;
+				PFEvolutionCommander.PFTankEvent event = new PFEvolutionCommander.PFTankEvent(this, gene.getGene(), now.getTime() - startTime.getTime(), note);
+				((Commander)game.getTeam()).sendBZRFlagEvent(event);
+			}
+			PotentialField attractor = new PotentialField();
+			attractor.setType("attractor");
+			attractor.setPoint(game.findTeamByColor(goal).getBase().getCenterPoint());
+			attractor.setRadius(gene.getAttRadius());
+			attractor.setSpread(gene.getAttSpread());
+			attractor.setStrength(gene.getAttStrength());
+			this.attractor = attractor;
+		}
+
+		//I've managed to nab a flag, but my attractor is currently set to the flag that I have just now captured
+		if(!retHome && !flag.equals("-") && attractor != null && attractor.getPoint().equals(game.findTeamByColor(goal).getBase().getCenterPoint())){
+			attractor = null;
+		}
+
+		//I have a flag, and nowhere to go with it, send me home
+		if(!retHome && !flag.equals("-") && attractor == null){
 			attractor = null;
 			PotentialField attractor = new PotentialField();
-			//TODO Shouldn't look at flag point as that may move as an enemy captures it
-			attractor.setId(UUID.randomUUID().toString());
 			attractor.setType("attractor");
-			attractor.setPoint(myTeam.getFlag().getPoint());
-			attractor.setRadius(1.0f);
-			attractor.setSpread(25f);
-			attractor.setStrength(1.0f);
+			attractor.setPoint(game.getTeam().getBase().getCenterPoint());
+			attractor.setRadius(gene.getAttRadius());
+			attractor.setSpread(gene.getAttSpread());
+			attractor.setStrength(gene.getAttStrength());
 			this.attractor = attractor;
 		}
 
@@ -171,29 +186,38 @@ public class PFAgent extends AbstractAgent{
 			vector.setY(vector.getY() + vec.getY());
 		}
 
-		for(PotentialField potentialField : potentialFields){
-			if(potentialField.getType().equals("attractor") && (type.contains("attractors") || type.equals("all"))){
-				Point vec = evaluateAttractor(x, y, potentialField);
+		PotentialField rejectorPotentialField = new PotentialField();
+		rejectorPotentialField.setType("rejector");
+		rejectorPotentialField.setStrength(gene.getRejStrength());
+		PotentialField tangentialPotentialField = new PotentialField();
+		tangentialPotentialField.setType("tangential");
+		tangentialPotentialField.setStrength(gene.getRejStrength());
+		for(Obstacle obstacle : game.getObstacles()){
+			if(type.contains("rejectors") || type.equals("all")){
+				rejectorPotentialField.setPoint(obstacle.getCenterPoint());
+				rejectorPotentialField.setRadius(obstacle.getRadius() * gene.getRejRadius());
+				rejectorPotentialField.setSpread(obstacle.getRadius() * gene.getRejSpread());
+				Point vec = evaluateRejector(x, y, rejectorPotentialField);
 				vector.setX(vector.getX() + vec.getX());
 				vector.setY(vector.getY() + vec.getY());
-			}else if(potentialField.getType().equals("rejector") && (type.contains("rejectors") || type.equals("all"))){
-				Point vec = evaluateRejector(x, y, potentialField);
-				vector.setX(vector.getX() + vec.getX());
-				vector.setY(vector.getY() + vec.getY());
-			}else if(potentialField.getType().equals("tangential") && (type.contains("tangentials") || type.equals("all"))){
-				Point vec = evaluateTangential(x, y, potentialField);
+			}
+			if(type.contains("tangentials") || type.equals("all")){
+				tangentialPotentialField.setPoint(obstacle.getCenterPoint());
+				tangentialPotentialField.setRadius(obstacle.getRadius() * gene.getTanRadius());
+				tangentialPotentialField.setSpread(obstacle.getRadius() * gene.getTanSpread());
+				Point vec = evaluateTangential(x, y, tangentialPotentialField);
 				vector.setX(vector.getX() + vec.getX());
 				vector.setY(vector.getY() + vec.getY());
 			}
 		}
 
-		//TODO Put tangentials on enemy tanks with a close radius (to avoid getting stuck)
+		//Put tangentials on enemy tanks with a close radius (to avoid getting stuck)
 		PotentialField tankField = new PotentialField();
-		tankField.setRadius(5f);
-		tankField.setSpread(5f);
+		tankField.setRadius(game.getTankRadius());
+		tankField.setSpread(game.getTankRadius() / 2);
 		tankField.setStrength(1f);
 		tankField.setType("tangential");
-		for(Team team : otherTeams){
+		for(Team team : game.getTeams()){
 			for(Tank tank : team.getTanks()){
 				tankField.setPoint(tank.getPosition());
 				Point vec = evaluateTangential(x, y, tankField);
@@ -230,32 +254,57 @@ public class PFAgent extends AbstractAgent{
 	@Override
 	public synchronized boolean getDesiredTriggerStatus(){
 		//TODO Don't shoot my team mates
-		if(timeToReload <= 0.0f)
-			return true;
+		//if(timeToReload <= 0.0f)
+		//	return true;
 		return false;
 	}
 
-	public synchronized PotentialField getAttractor(){
-		return attractor;
-	}
-
-	public synchronized void setAttractor(PotentialField attractor){
-		this.attractor = attractor;
-	}
-
-	public synchronized List<PotentialField> getPotentialFields(){
-		return potentialFields;
-	}
-
-	public synchronized void setPotentialFields(List<PotentialField> potentialFields){
-		this.potentialFields = potentialFields;
-	}
-
-	public synchronized PIDController getAngleController(){
+	public PIDController getAngleController(){
 		return angleController;
 	}
 
-	public synchronized void setAngleController(PIDController angleController){
+	public void setAngleController(PIDController angleController){
 		this.angleController = angleController;
+	}
+
+	public PFGene getGene(){
+		return gene;
+	}
+
+	public void setGene(PFGene gene){
+		startTime = new Date();
+		this.gene = gene;
+	}
+
+	public String getGoal(){
+		return goal;
+	}
+
+	public void setGoal(String goal){
+		this.goal = goal;
+	}
+
+	public PotentialField getAttractor(){
+		return attractor;
+	}
+
+	public void setAttractor(PotentialField attractor){
+		this.attractor = attractor;
+	}
+
+	public Date getStartTime(){
+		return startTime;
+	}
+
+	public void setStartTime(Date startTime){
+		this.startTime = startTime;
+	}
+
+	public boolean isRetHome(){
+		return retHome;
+	}
+
+	public void setRetHome(boolean retHome){
+		this.retHome = retHome;
 	}
 }

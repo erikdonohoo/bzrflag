@@ -45,7 +45,7 @@ public class Game{
 
 	//Internal Objects
 	protected Team team;
-	protected Set<Team> teams;
+	protected List<Team> teams;
 	protected List<Obstacle> obstacles;
 
 	//Communication Objects
@@ -56,7 +56,7 @@ public class Game{
 	public Game(){
 		state = "instantiated";
 
-		teams = new HashSet<>();
+		teams = new ArrayList<>();
 		obstacles = new ArrayList<>();
 	}
 
@@ -65,6 +65,14 @@ public class Game{
 		this.id = id;
 		this.host = host;
 		this.port = port;
+	}
+
+	public Team findTeamByColor(String color){
+		for(Team team : teams){
+			if(team.getColor().equals(color))
+				return team;
+		}
+		return null;
 	}
 
 	public synchronized String getId(){
@@ -267,11 +275,11 @@ public class Game{
 		this.team = team;
 	}
 
-	public synchronized Set<Team> getTeams(){
+	public synchronized List<Team> getTeams(){
 		return teams;
 	}
 
-	public synchronized void setTeams(Set<Team> teams){
+	public synchronized void setTeams(List<Team> teams){
 		this.teams = teams;
 	}
 

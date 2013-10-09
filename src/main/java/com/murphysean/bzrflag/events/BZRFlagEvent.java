@@ -1,6 +1,6 @@
 package com.murphysean.bzrflag.events;
 
-public class BZRFlagEvent{
+public abstract class BZRFlagEvent{
 	public static final String SHOT_TYPE = "shot";
 	public static final String MY_TANK_TYPE = "mytank";
 	public static final String OTHER_TANK_TYPE = "othertank";

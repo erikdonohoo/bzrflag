@@ -1,6 +1,6 @@
 package com.murphysean.bzrflag.events;
 
-public class OtherTankEvent{
+public class OtherTankEvent extends BZRFlagEvent{
 	protected String color;
 	protected String callsign;
 	protected int tankIndex;
@@ -11,6 +11,7 @@ public class OtherTankEvent{
 	protected float angle;
 
 	public OtherTankEvent(String color, String callsign, int tankIndex, String status, String flag, float x, float y, float angle){
+		super(BZRFlagEvent.OTHER_TANK_TYPE);
 		this.tankIndex = tankIndex;
 		this.callsign = callsign;
 		this.color = color;

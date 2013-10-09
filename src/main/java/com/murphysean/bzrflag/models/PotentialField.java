@@ -8,20 +8,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class PotentialField{
-	protected String id;
 	protected String type;
 	protected Point point;
 	protected Float radius;
 	protected Float spread;
 	protected Float strength;
-
-	public String getId(){
-		return id;
-	}
-
-	public void setId(String id){
-		this.id = id;
-	}
 
 	public String getType(){
 		return type;
