@@ -5,6 +5,7 @@ app.config(function($routeProvider){
 		.when('/', {templateUrl: 'partials/home.html', controller: 'MainCtrl'})
 		.when('/games/:id', {templateUrl: 'partials/game.html', controller: 'GameCtrl'})
 		.when('/games/:gameid/teams/me/tanks/:tankid', {templateUrl: 'partials/tank.html', controller: 'TankCtrl'})
+		.when('/genes', {templateUrl: 'partials/gene.html', controller: 'GeneCtrl'})
 		.otherwise({redirectTo: '/'});
 })
 
