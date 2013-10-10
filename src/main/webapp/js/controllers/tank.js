@@ -1,11 +1,12 @@
 angular.module("BZRFlag").controller("TankCtrl", 
-	["$scope", "Game", "$timeout", "$routeParams", "Tank",
-	function($scope, Game, $timeout, $routeParams, Tank){
+	["$scope", "Game", "$timeout", "$routeParams", "Tank", "Backend",
+	function($scope, Game, $timeout, $routeParams, Tank, Backend){
 
 	// Models
 	var data = {};
 	data.gameId = $routeParams.gameid;
 	data.tankId = $routeParams.tankid;
+	data.prefix = Backend.getAPIPrefix();
 	data.visualMultiplier = 13;
 	data.numSteps = 20;
 	data.type = "all";
