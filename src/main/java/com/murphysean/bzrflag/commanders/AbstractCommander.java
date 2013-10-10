@@ -1,7 +1,6 @@
 package com.murphysean.bzrflag.commanders;
 
 import com.murphysean.bzrflag.events.BZRFlagEvent;
-import com.murphysean.bzrflag.interfaces.Agent;
 import com.murphysean.bzrflag.interfaces.Commander;
 import com.murphysean.bzrflag.models.Game;
 import com.murphysean.bzrflag.models.Team;
@@ -11,8 +10,6 @@ import org.codehaus.jackson.annotate.JsonSubTypes;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
 
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.ArrayList;
-import java.util.List;
 
 @XmlRootElement
 @JsonIgnoreProperties(ignoreUnknown=true)

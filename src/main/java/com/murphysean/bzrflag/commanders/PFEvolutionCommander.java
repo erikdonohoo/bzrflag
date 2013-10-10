@@ -5,14 +5,9 @@ import com.murphysean.bzrflag.daos.PFGenDAO;
 import com.murphysean.bzrflag.events.BZRFlagEvent;
 import com.murphysean.bzrflag.models.Game;
 import com.murphysean.bzrflag.models.PFGene;
-import com.murphysean.bzrflag.models.Tank;
-import com.murphysean.bzrflag.models.Team;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 public class PFEvolutionCommander extends AbstractCommander{
 	@JsonIgnore

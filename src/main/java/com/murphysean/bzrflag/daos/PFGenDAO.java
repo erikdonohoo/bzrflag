@@ -2,6 +2,7 @@ package com.murphysean.bzrflag.daos;
 
 import com.datastax.driver.core.*;
 import com.murphysean.bzrflag.models.PFGene;
+import com.murphysean.bzrflag.models.PFGeneFitness;
 import com.murphysean.bzrflag.singletons.CassandraConnection;
 
 import java.util.ArrayList;
@@ -42,6 +43,38 @@ public class PFGenDAO{
 		return pfGene;
 	}
 
+	public PFGene readPFGene(String gene){
+		PreparedStatement statement = session.prepare("SELECT * FROM pfgenetics WHERE gene = ?");
+
+		BoundStatement boundStatement = new BoundStatement(statement)
+				.setString("gene", gene);
+
+		ResultSet resultSet = session.execute(boundStatement);
+		Row row = resultSet.one();
+		if(row != null){
+			PFGene pfGene = new PFGene();
+			pfGene.setGene(row.getString("gene"));
+			pfGene.setGeneration(row.getInt("generation"));
+			pfGene.setAttRadius(row.getFloat("attradius"));
+			pfGene.setAttSpread(row.getFloat("attspread"));
+			pfGene.setAttStrength(row.getFloat("attstrength"));
+
+			pfGene.setRejRadius(row.getFloat("rejradius"));
+			pfGene.setRejSpread(row.getFloat("rejspread"));
+			pfGene.setRejStrength(row.getFloat("rejstrength"));
+
+			pfGene.setTanRadius(row.getFloat("tanradius"));
+			pfGene.setTanSpread(row.getFloat("tanspread"));
+			pfGene.setTanStrength(row.getFloat("tanstrength"));
+
+			pfGene.setParentGenes(row.getList("parentgenes", String.class));
+			pfGene.setMutations(row.getString("mutations"));
+			return pfGene;
+		}
+
+		return null;
+	}
+
 	public void addFitnessToGene(String gene, float fitness){
 		PreparedStatement statement = session.prepare("UPDATE pfgenetics SET fitness = fitness + [?] WHERE gene = ?");
 
@@ -50,6 +83,38 @@ public class PFGenDAO{
 				.setString("gene", gene);
 
 		session.execute(boundStatement);
+	}
+
+	public List<PFGene> readPFGenes(){
+		List<PFGene> ret = new ArrayList<>();
+
+		PreparedStatement statement = session.prepare("SELECT * FROM pfgenetics");
+		BoundStatement boundStatement = new BoundStatement(statement);
+
+		ResultSet resultSet = session.execute(boundStatement);
+
+		for(Row row : resultSet){
+			PFGene pfGene = new PFGene();
+			pfGene.setGene(row.getString("gene"));
+			pfGene.setGeneration(row.getInt("generation"));
+			pfGene.setAttRadius(row.getFloat("attradius"));
+			pfGene.setAttSpread(row.getFloat("attspread"));
+			pfGene.setAttStrength(row.getFloat("attstrength"));
+
+			pfGene.setRejRadius(row.getFloat("rejradius"));
+			pfGene.setRejSpread(row.getFloat("rejspread"));
+			pfGene.setRejStrength(row.getFloat("rejstrength"));
+
+			pfGene.setTanRadius(row.getFloat("tanradius"));
+			pfGene.setTanSpread(row.getFloat("tanspread"));
+			pfGene.setTanStrength(row.getFloat("tanstrength"));
+
+			pfGene.setParentGenes(row.getList("parentgenes", String.class));
+			pfGene.setMutations(row.getString("mutations"));
+			ret.add(pfGene);
+		}
+
+		return ret;
 	}
 
 	public List<PFGene> readPFGenes(int generation){
@@ -77,7 +142,6 @@ public class PFGenDAO{
 			pfGene.setTanSpread(row.getFloat("tanspread"));
 			pfGene.setTanStrength(row.getFloat("tanstrength"));
 
-			pfGene.setFitness(row.getList("fitness", Float.class));
 			pfGene.setParentGenes(row.getList("parentgenes", String.class));
 			pfGene.setMutations(row.getString("mutations"));
 			ret.add(pfGene);
@@ -96,5 +160,31 @@ public class PFGenDAO{
 				.setString("note", note);
 
 		session.execute(boundStatement);
+	}
+
+	public List<PFGeneFitness> readPFGeneFitnessForGene(String gene){
+		List<PFGeneFitness> ret = new ArrayList<>();
+
+		PreparedStatement statement = session.prepare("SELECT * FROM pfgeneticsfitness WHERE gene = ?");
+		BoundStatement boundStatement = new BoundStatement(statement)
+				.setString("gene", gene);
+
+		ResultSet resultSet = session.execute(boundStatement);
+
+		for(Row row : resultSet){
+			PFGeneFitness pfGeneFitness = new PFGeneFitness();
+			pfGeneFitness.setGene(row.getString("gene"));
+			pfGeneFitness.setFitness(row.getInt("fitness"));
+			pfGeneFitness.setMap(row.getString("map"));
+			pfGeneFitness.setNote(row.getString("note"));
+			ret.add(pfGeneFitness);
+		}
+
+		return ret;
+	}
+
+	public PFGene readPFGeneFitness(PFGene gene){
+		gene.setFitness(readPFGeneFitnessForGene(gene.getGene()));
+		return gene;
 	}
 }

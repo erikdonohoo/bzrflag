@@ -1,19 +1,19 @@
 package com.murphysean.bzrflag.controllers;
 
 import com.murphysean.bzrflag.agents.AbstractAgent;
-import com.murphysean.bzrflag.agents.DumbAgent;
-import com.murphysean.bzrflag.agents.PFAgent;
 import com.murphysean.bzrflag.commanders.PFEvolutionCommander;
 import com.murphysean.bzrflag.communicators.BZRFlagInputCommunicator;
 import com.murphysean.bzrflag.communicators.BZRFlagOutputCommunicator;
-import com.murphysean.bzrflag.models.*;
+import com.murphysean.bzrflag.models.Base;
+import com.murphysean.bzrflag.models.Game;
+import com.murphysean.bzrflag.models.Obstacle;
+import com.murphysean.bzrflag.models.Team;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.*;
 import java.net.Socket;
 import java.util.Date;
-import java.util.Iterator;
 
 @XmlRootElement
 @JsonIgnoreProperties(ignoreUnknown=true)

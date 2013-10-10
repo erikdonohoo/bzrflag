@@ -1,8 +1,6 @@
 package com.murphysean.bzrflag.models;
 
-import com.murphysean.bzrflag.agents.AbstractAgent;
 import com.murphysean.bzrflag.interfaces.Agent;
-import com.murphysean.bzrflag.models.*;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

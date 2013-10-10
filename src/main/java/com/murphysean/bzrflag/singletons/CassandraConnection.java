@@ -1,12 +1,12 @@
 package com.murphysean.bzrflag.singletons;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.logging.Logger;
-
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.Cluster.Builder;
 import com.datastax.driver.core.Session;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.logging.Logger;
 
 public class CassandraConnection {
 	private Logger logger = Logger.getLogger(this.getClass().getName());

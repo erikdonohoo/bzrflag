@@ -1,8 +1,8 @@
 package com.murphysean.bzrflag.resources;
 
-import com.murphysean.bzrflag.singletons.GameControllerSingleton;
 import com.murphysean.bzrflag.controllers.GameController;
 import com.murphysean.bzrflag.models.Team;
+import com.murphysean.bzrflag.singletons.GameControllerSingleton;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

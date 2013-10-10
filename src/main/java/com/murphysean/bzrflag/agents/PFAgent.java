@@ -2,17 +2,13 @@ package com.murphysean.bzrflag.agents;
 
 import com.murphysean.bzrflag.commanders.PFEvolutionCommander;
 import com.murphysean.bzrflag.controllers.PIDController;
-import com.murphysean.bzrflag.events.BZRFlagEvent;
 import com.murphysean.bzrflag.interfaces.Commander;
 import com.murphysean.bzrflag.models.*;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.UUID;
 
 @XmlRootElement
 @JsonIgnoreProperties(ignoreUnknown = true)

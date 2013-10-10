@@ -6,8 +6,6 @@ import com.murphysean.bzrflag.interfaces.Commander;
 import com.murphysean.bzrflag.models.*;
 
 import java.io.BufferedReader;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * The BZRFlag Input Communicator will continoulsly read the input from the bzrflag server and update the game world

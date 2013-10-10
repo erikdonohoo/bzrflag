@@ -22,7 +22,7 @@ public class PFGene{
 	protected float tanRadius;
 	protected float tanSpread;
 	protected float tanStrength;
-	protected List<Float> fitness;
+	protected List<PFGeneFitness> fitness;
 	protected List<String> parentGenes;
 	protected String mutations;
 
@@ -202,11 +202,11 @@ public class PFGene{
 		this.tanStrength = tanStrength;
 	}
 
-	public List<Float> getFitness(){
+	public List<PFGeneFitness> getFitness(){
 		return fitness;
 	}
 
-	public void setFitness(List<Float> fitness){
+	public void setFitness(List<PFGeneFitness> fitness){
 		this.fitness = fitness;
 	}
 

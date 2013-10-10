@@ -1,11 +1,7 @@
 package com.murphysean.bzrflag.interfaces;
 
 import com.murphysean.bzrflag.events.BZRFlagEvent;
-import com.murphysean.bzrflag.events.OccGridEvent;
 import com.murphysean.bzrflag.models.Game;
-
-import java.awt.image.BufferedImage;
-import java.util.List;
 
 /**A Commander is more specifically the current team. It manages it's tanks, which for a commander are all agents, their
  * current assignments, it can answer questions for a tank, it maintains a reference to the game model.

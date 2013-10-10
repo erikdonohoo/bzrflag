@@ -1,10 +1,10 @@
 package com.murphysean.bzrflag.resources;
 
-import com.murphysean.bzrflag.singletons.GameControllerSingleton;
 import com.murphysean.bzrflag.agents.AbstractAgent;
 import com.murphysean.bzrflag.agents.PFAgent;
 import com.murphysean.bzrflag.controllers.GameController;
 import com.murphysean.bzrflag.models.*;
+import com.murphysean.bzrflag.singletons.GameControllerSingleton;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -13,7 +13,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.UUID;
 
 @Path("/games/{gameId}/teams/{teamId}/tanks")
