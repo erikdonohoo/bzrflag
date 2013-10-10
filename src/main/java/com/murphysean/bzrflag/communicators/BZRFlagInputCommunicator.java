@@ -66,26 +66,26 @@ public class BZRFlagInputCommunicator implements Runnable{
 
 		switch(parts[0]){
 			case "mytank":
-				readMyTank(Integer.valueOf(parts[1]), parts[2], parts[3], Integer.valueOf(parts[4]), Float.valueOf(parts[5]), parts[6], Float.valueOf(parts[7]), Float.valueOf(parts[8]), Float.valueOf(parts[9]), Float.valueOf(parts[10]), Float.valueOf(parts[11]), Float.valueOf(parts[12]));
+				readMyTank(Integer.valueOf(parts[1]),parts[2],parts[3],Integer.valueOf(parts[4]),Float.valueOf(parts[5]),parts[6],Float.valueOf(parts[7]),Float.valueOf(parts[8]),Float.valueOf(parts[9]),Float.valueOf(parts[10]),Float.valueOf(parts[11]),Float.valueOf(parts[12]));
 				break;
 			case "shot":
-				readShot(Float.valueOf(parts[1]), Float.valueOf(parts[2]), Float.valueOf(parts[3]), Float.valueOf(parts[4]));
+				readShot(Float.valueOf(parts[1]),Float.valueOf(parts[2]),Float.valueOf(parts[3]),Float.valueOf(parts[4]));
 				break;
 			case "othertank":
-				readOtherTank(parts[1], parts[2], parts[3], parts[4], Float.valueOf(parts[5]), Float.valueOf(parts[6]), Float.valueOf(parts[7]));
+				readOtherTank(parts[1],parts[2],parts[3],parts[4],Float.valueOf(parts[5]),Float.valueOf(parts[6]),Float.valueOf(parts[7]));
 				break;
 			case "timer":
 				game.setTimeElapsed(Float.valueOf(parts[1]));
 				game.setTimeLimit(Float.valueOf(parts[2]));
 				break;
 			case "score":
-				readScore(parts[1], parts[2], Integer.valueOf(parts[3]));
+				readScore(parts[1],parts[2],Integer.valueOf(parts[3]));
 				break;
 			case "flag":
-				readFlag(parts[1], parts[2], Float.valueOf(parts[3]), Float.valueOf(parts[4]));
+				readFlag(parts[1],parts[2],Float.valueOf(parts[3]),Float.valueOf(parts[4]));
 				break;
 			case "team":
-				readTeam(parts[1], Integer.valueOf(parts[2]));
+				readTeam(parts[1],Integer.valueOf(parts[2]));
 				break;
 			case "obstacle":
 				readObstacle(responseLine);
@@ -94,7 +94,7 @@ public class BZRFlagInputCommunicator implements Runnable{
 				readBase(responseLine);
 				break;
 			case "constant":
-				readConstant(parts[1], parts[2]);
+				readConstant(parts[1],parts[2]);
 				break;
 			case "at":
 				String[] ints = parts[1].split(",");
@@ -106,7 +106,7 @@ public class BZRFlagInputCommunicator implements Runnable{
 				String[] sizes = parts[1].split("x");
 				int length = Integer.valueOf(sizes[0]);
 				int height = Integer.valueOf(sizes[1]);
-				occGridSize = new Point(length, height);
+				occGridSize = new Point(length,height);
 				break;
 			default:
 				throw new RuntimeException("Unknown Response: " + responseLine);
@@ -139,15 +139,15 @@ public class BZRFlagInputCommunicator implements Runnable{
 	public void readScore(String teamColor, String otherTeamColor, int score){
 		for(Team team : game.getTeams()){
 			if(team.getColor().equals(teamColor)){
-				team.setScore(otherTeamColor, score);
+				team.setScore(otherTeamColor,score);
 			}
 		}
 	}
 
 	public void readShot(float x, float y, float vx, float vy){
 		Shot shot = new Shot();
-		shot.setPoint(new Point(x, y));
-		shot.setVelocity(new Point(vx, vy));
+		shot.setPoint(new Point(x,y));
+		shot.setVelocity(new Point(vx,vy));
 
 		//TODO Notify tanks of this shot, or maybe notify team
 		//Someone will need to process the shots and determine if any of them are a risk to tank/team
@@ -158,15 +158,15 @@ public class BZRFlagInputCommunicator implements Runnable{
 
 	public void readMyTank(int tankIndex, String callsign, String status, int shotsAvailable, float timeToReload, String flag, float x, float y, float angle, float vx, float vy, float vangle){
 		Tank tank = game.getTeam().getTanks().get(tankIndex);
-		tank.update(status, shotsAvailable, timeToReload, flag, x, y, vx, vy, angle, vangle);
+		tank.update(status,shotsAvailable,timeToReload,flag,x,y,vx,vy,angle,vangle);
 	}
 
 	public void readOtherTank(String callsign, String color, String status, String flag, float x, float y, float angle){
 		for(Team team : game.getTeams()){
 			if(team.getColor().equals(color)){
-				int index = Integer.valueOf(callsign.replaceAll("\\D", ""));
+				int index = Integer.valueOf(callsign.replaceAll("\\D",""));
 				Tank tank = team.getTanks().get(index);
-				tank.update(status, flag, x, y, angle);
+				tank.update(status,flag,x,y,angle);
 				break;
 			}
 		}

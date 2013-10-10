@@ -6,13 +6,19 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
 
 @XmlRootElement
-@JsonIgnoreProperties(ignoreUnknown=true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PIDController{
-	/** Proportional gain, a tuning parameter**/
+	/**
+	 * Proportional gain, a tuning parameter*
+	 */
 	protected volatile float kp;
-	/** Integral gain, a tuning parameter**/
+	/**
+	 * Integral gain, a tuning parameter*
+	 */
 	protected volatile float ki;
-	/** Derivative gain, a tuning parameter**/
+	/**
+	 * Derivative gain, a tuning parameter*
+	 */
 	protected volatile float kd;
 
 	protected volatile float setPoint;

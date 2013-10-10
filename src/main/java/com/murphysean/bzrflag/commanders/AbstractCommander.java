@@ -12,11 +12,11 @@ import org.codehaus.jackson.annotate.JsonTypeInfo;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-@JsonIgnoreProperties(ignoreUnknown=true)
-@JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="type")
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({
-		@JsonSubTypes.Type(value=PFEvolutionCommander.class, name="pfevolution"),
-		@JsonSubTypes.Type(value=OccGridCommander.class, name="occgrid")
+		@JsonSubTypes.Type(value = PFEvolutionCommander.class, name = "pfevolution"),
+		@JsonSubTypes.Type(value = OccGridCommander.class, name = "occgrid")
 })
 public abstract class AbstractCommander extends Team implements Commander{
 	@JsonIgnore

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 @XmlRootElement
-@JsonIgnoreProperties(ignoreUnknown=true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Team{
 	protected String id;
 	protected String color;
@@ -120,7 +120,7 @@ public class Team{
 	}
 
 	public void setScore(String team, Integer score){
-		this.score.put(team, score);
+		this.score.put(team,score);
 	}
 
 	@Override
@@ -128,7 +128,7 @@ public class Team{
 		if(this == o) return true;
 		if(o == null || getClass() != o.getClass()) return false;
 
-		Team team = (Team) o;
+		Team team = (Team)o;
 
 		if(!id.equals(team.id)) return false;
 

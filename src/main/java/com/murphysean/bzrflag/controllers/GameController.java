@@ -16,7 +16,7 @@ import java.net.Socket;
 import java.util.Date;
 
 @XmlRootElement
-@JsonIgnoreProperties(ignoreUnknown=true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class GameController implements Runnable, AutoCloseable{
 	protected String gameId;
 	protected String host;
@@ -40,7 +40,7 @@ public class GameController implements Runnable, AutoCloseable{
 		this.host = host;
 		this.port = port;
 
-		game = new Game(gameId, host, port);
+		game = new Game(gameId,host,port);
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public class GameController implements Runnable, AutoCloseable{
 		try{
 			game.setState("connecting");
 			//Open a socket
-			socket = new Socket(host, port);
+			socket = new Socket(host,port);
 			//Handshake
 			bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
@@ -80,10 +80,10 @@ public class GameController implements Runnable, AutoCloseable{
 
 			//Spin out threads to handle async
 			BZRFlagInputCommunicator inputCommunicator = new BZRFlagInputCommunicator(this);
-			Thread inputThread = new Thread(inputCommunicator, "bzrflagInputCommunicator");
+			Thread inputThread = new Thread(inputCommunicator,"bzrflagInputCommunicator");
 			inputThread.start();
 			BZRFlagOutputCommunicator outputCommunicator = new BZRFlagOutputCommunicator(this);
-			Thread outputThread = new Thread(outputCommunicator, "bzrflagOutputCommunicator");
+			Thread outputThread = new Thread(outputCommunicator,"bzrflagOutputCommunicator");
 			outputThread.start();
 
 			PFEvolutionCommander commander = new PFEvolutionCommander();

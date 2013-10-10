@@ -25,7 +25,7 @@ public class GameResource{
 
 	@GET
 	@Path("/{gameId}")
-	public Response getGame(@PathParam(value="gameId") String gameId){
+	public Response getGame(@PathParam(value = "gameId") String gameId){
 		GameController gameController = GameControllerSingleton.getInstance().getGameController(gameId);
 
 		if(gameController == null)
@@ -35,8 +35,8 @@ public class GameResource{
 
 	@POST
 	public Response startGame(Game game){
-		GameController gameController = GameControllerSingleton.getInstance().addGameController(game.getHost(), game.getPort());
-		Thread thread = new Thread(gameController, gameController.getGameId());
+		GameController gameController = GameControllerSingleton.getInstance().addGameController(game.getHost(),game.getPort());
+		Thread thread = new Thread(gameController,gameController.getGameId());
 		thread.start();
 
 		return Response.created(URI.create(gameController.getGameId())).build();
@@ -44,7 +44,7 @@ public class GameResource{
 
 	@DELETE
 	@Path("/{gameId}")
-	public Response endGame(@PathParam(value="gameId") String gameId){
+	public Response endGame(@PathParam(value = "gameId") String gameId){
 		GameControllerSingleton.getInstance().removeGameController(gameId);
 		return Response.noContent().build();
 	}

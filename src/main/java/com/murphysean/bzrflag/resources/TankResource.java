@@ -19,7 +19,7 @@ import java.util.UUID;
 public class TankResource{
 
 	@GET
-	public Response getTanks(@PathParam(value="gameId") String gameId, @PathParam(value="teamId") String teamId){
+	public Response getTanks(@PathParam(value = "gameId") String gameId, @PathParam(value = "teamId") String teamId){
 		GameController gameController = GameControllerSingleton.getInstance().getGameController(gameId);
 
 		if(gameController == null)
@@ -43,7 +43,7 @@ public class TankResource{
 
 	@GET
 	@Path("/{tankId}")
-	public Response getTank(@PathParam(value="gameId") String gameId, @PathParam(value="teamId") String teamId, @PathParam(value="tankId") Integer tankId){
+	public Response getTank(@PathParam(value = "gameId") String gameId, @PathParam(value = "teamId") String teamId, @PathParam(value = "tankId") Integer tankId){
 		GameController gameController = GameControllerSingleton.getInstance().getGameController(gameId);
 
 		if(gameController == null)
@@ -68,13 +68,13 @@ public class TankResource{
 	@GET
 	@Path("/{tankId}.gpi")
 	@Produces("text/plain")
-	public Response getPotentialFieldGraphFileForTank(@PathParam(value="gameId") String gameId,
-													  @PathParam(value="teamId") String teamId,
-													  @PathParam(value="tankId") Integer tankId,
-													  @DefaultValue(value="20") @QueryParam(value="numSteps") Integer numSteps,
-													  @DefaultValue(value="Potential Field") @QueryParam(value="title") String title,
-													  @DefaultValue(value="all") @QueryParam(value="type") String type,
-													  @DefaultValue(value="1") @QueryParam(value="visualMultiplier") Float visualMultiplier){
+	public Response getPotentialFieldGraphFileForTank(@PathParam(value = "gameId") String gameId,
+													  @PathParam(value = "teamId") String teamId,
+													  @PathParam(value = "tankId") Integer tankId,
+													  @DefaultValue(value = "20") @QueryParam(value = "numSteps") Integer numSteps,
+													  @DefaultValue(value = "Potential Field") @QueryParam(value = "title") String title,
+													  @DefaultValue(value = "all") @QueryParam(value = "type") String type,
+													  @DefaultValue(value = "1") @QueryParam(value = "visualMultiplier") Float visualMultiplier){
 		if(!teamId.equals("me"))
 			return Response.status(Response.Status.FORBIDDEN).build();
 
@@ -91,19 +91,19 @@ public class TankResource{
 			return Response.status(Response.Status.BAD_REQUEST).build();
 		PFAgent agent = (PFAgent)tank;
 
-		return Response.ok(createPotentialFieldGNUPlotString(gameController, agent, numSteps, title, type, visualMultiplier)).build();
+		return Response.ok(createPotentialFieldGNUPlotString(gameController,agent,numSteps,title,type,visualMultiplier)).build();
 	}
 
 	@GET
 	@Path("/{tankId}.png")
 	@Produces("image/png")
-	public Response getPotentialFieldImageForTank(@PathParam(value="gameId") String gameId,
-													  @PathParam(value="teamId") String teamId,
-													  @PathParam(value="tankId") Integer tankId,
-													  @DefaultValue(value="20") @QueryParam(value="numSteps") Integer numSteps,
-													  @DefaultValue(value="Potential Field") @QueryParam(value="title") String title,
-													  @DefaultValue(value="all") @QueryParam(value="type") String type,
-													  @DefaultValue(value="1") @QueryParam(value="visualMultiplier") Float visualMultiplier){
+	public Response getPotentialFieldImageForTank(@PathParam(value = "gameId") String gameId,
+												  @PathParam(value = "teamId") String teamId,
+												  @PathParam(value = "tankId") Integer tankId,
+												  @DefaultValue(value = "20") @QueryParam(value = "numSteps") Integer numSteps,
+												  @DefaultValue(value = "Potential Field") @QueryParam(value = "title") String title,
+												  @DefaultValue(value = "all") @QueryParam(value = "type") String type,
+												  @DefaultValue(value = "1") @QueryParam(value = "visualMultiplier") Float visualMultiplier){
 		if(!teamId.equals("me"))
 			return Response.status(Response.Status.FORBIDDEN).build();
 
@@ -120,12 +120,12 @@ public class TankResource{
 			return Response.status(Response.Status.BAD_REQUEST).build();
 		PFAgent agent = (PFAgent)tank;
 
-		String gnuplot = createPotentialFieldGNUPlotString(gameController, agent, numSteps, title, type, visualMultiplier);
+		String gnuplot = createPotentialFieldGNUPlotString(gameController,agent,numSteps,title,type,visualMultiplier);
 
 		//Take this gnuplot string, and shuffle it to a file, then pass the file into gnuplot as an argument
 		try{
 			String uuid = UUID.randomUUID().toString();
-			File tmpGNUPlotFile = File.createTempFile(uuid, ".gpi");
+			File tmpGNUPlotFile = File.createTempFile(uuid,".gpi");
 			FileWriter fw = new FileWriter(tmpGNUPlotFile.getAbsoluteFile());
 			fw.write(gnuplot);
 			fw.flush();
@@ -134,7 +134,7 @@ public class TankResource{
 			File tmpGNUPlotImage = new File(System.getProperty("java.io.tmpdir") + "/" + uuid + ".png");
 
 			//gnuplot -e "set term png;set output 'fields.png'" test.gpi
-			ProcessBuilder processBuilder = new ProcessBuilder("gnuplot", "-e", "set term png;set output '" + tmpGNUPlotImage.getAbsolutePath() + "'", tmpGNUPlotFile.getAbsolutePath());
+			ProcessBuilder processBuilder = new ProcessBuilder("gnuplot","-e","set term png;set output '" + tmpGNUPlotImage.getAbsolutePath() + "'",tmpGNUPlotFile.getAbsolutePath());
 			Process p = processBuilder.start();
 			p.waitFor();
 
@@ -156,8 +156,8 @@ public class TankResource{
 		//Lay down ranges
 		Integer worldSize = gameController.getGame().getWorldSize();
 		Integer worldSizeHalf = worldSize / 2;
-		stringWriter.write("set xrange [-" + worldSizeHalf + ":"+ worldSizeHalf + "]\n");
-		stringWriter.write("set yrange [-" + worldSizeHalf + ":"+ worldSizeHalf + "]\n");
+		stringWriter.write("set xrange [-" + worldSizeHalf + ":" + worldSizeHalf + "]\n");
+		stringWriter.write("set yrange [-" + worldSizeHalf + ":" + worldSizeHalf + "]\n");
 		stringWriter.write("unset key\n");
 		stringWriter.write("set size square\n");
 
@@ -166,14 +166,14 @@ public class TankResource{
 		for(Obstacle obstacle : gameController.getGame().getObstacles()){
 			for(int i = 0; i < obstacle.getPoints().size(); i++){
 				Point one = obstacle.getPoints().get(i);
-				Point two = obstacle.getPoints().get((i+1) % obstacle.getPoints().size());
+				Point two = obstacle.getPoints().get((i + 1) % obstacle.getPoints().size());
 				stringWriter.write("set arrow from " + one.getX() + ", " + one.getY() + " to " + two.getX() + ", " + two.getY() + " nohead lt 3\n");
 			}
 		}
 
 		//Write in some metadata about the agent
 		stringWriter.write("#Agent is @: " + agent.getPosition().getX() + ", " + agent.getPosition().getY() + " with flag: " + agent.getFlag() + "\n");
-		Point realVector = agent.evaluate(agent.getPosition().getX(), agent.getPosition().getY(), type);
+		Point realVector = agent.evaluate(agent.getPosition().getX(),agent.getPosition().getY(),type);
 		stringWriter.write("#Agent is experiencing: " + realVector.getX() + ", " + realVector.getY() + "\n");
 
 		stringWriter.write("plot '-' with vectors head\n");
@@ -204,7 +204,7 @@ public class TankResource{
 
 	@PUT
 	@Path("/{tankId}")
-	public Response updateTank(@PathParam(value="gameId") String gameId, @PathParam(value="teamId") String teamId, @PathParam(value="tankId") Integer tankId, AbstractAgent agent){
+	public Response updateTank(@PathParam(value = "gameId") String gameId, @PathParam(value = "teamId") String teamId, @PathParam(value = "tankId") Integer tankId, AbstractAgent agent){
 		//TODO Make sure this is for one of my tanks... and that everything is ok?
 		if(!teamId.equals("me"))
 			return Response.status(Response.Status.FORBIDDEN).build();
@@ -228,7 +228,7 @@ public class TankResource{
 			pfAgent.setGame(game);
 		}
 
-		team.getTanks().set(tankId, agent);
+		team.getTanks().set(tankId,agent);
 		return Response.ok(agent).build();
 	}
 }

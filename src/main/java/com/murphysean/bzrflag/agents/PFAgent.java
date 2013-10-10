@@ -42,59 +42,60 @@ public class PFAgent extends AbstractAgent{
 
 	private static Point evaluateAttractor(float agentX, float agentY, PotentialField attractor){
 		//Find the distance between the agent and the goal
-		float distance = (float) Math.sqrt(Math.pow(attractor.getPoint().getX() - agentX, 2.0d) +
-				Math.pow(attractor.getPoint().getY() - agentY, 2.0d));
-		float angle = (float) Math.atan2(attractor.getPoint().getY() - agentY, attractor.getPoint().getX() - agentX);
+		float distance = (float)Math.sqrt(Math.pow(attractor.getPoint().getX() - agentX,2.0d) +
+				Math.pow(attractor.getPoint().getY() - agentY,2.0d));
+		float angle = (float)Math.atan2(attractor.getPoint().getY() - agentY,attractor.getPoint().getX() - agentX);
 
 		//Whoa, you're there
 		if(distance < attractor.getRadius())
-			return new Point(0.0f, 0.0f);
+			return new Point(0.0f,0.0f);
 		//You're somewhere out there, just come in at the attractors strength
 		if(distance > (attractor.getSpread() + attractor.getRadius()))
-			return new Point((float) (attractor.getStrength() * Math.cos(angle)), (float) (attractor.getStrength() * Math.sin(angle)));
+			return new Point((float)(attractor.getStrength() * Math.cos(angle)),(float)(attractor.getStrength() * Math.sin(angle)));
 		//You're coming in, slowly fall off to 0
-		return new Point((float) (attractor.getStrength() * ((distance - attractor.getRadius()) / attractor.getSpread()) * Math.cos(angle)), (float) (attractor.getStrength() * ((distance - attractor.getRadius()) / attractor.getSpread()) * Math.sin(angle)));
+		return new Point((float)(attractor.getStrength() * ((distance - attractor.getRadius()) / attractor.getSpread()) * Math.cos(angle)),(float)(attractor.getStrength() * ((distance - attractor.getRadius()) / attractor.getSpread()) * Math.sin(angle)));
 	}
 
 	private static Point evaluateRejector(float agentX, float agentY, PotentialField rejector){
-		float distance = (float) Math.sqrt(Math.pow(rejector.getPoint().getX() - agentX, 2.0d) +
-				Math.pow(rejector.getPoint().getY() - agentY, 2.0d));
-		float angle = (float) Math.atan2(rejector.getPoint().getY() - agentY, rejector.getPoint().getX() - agentX);
+		float distance = (float)Math.sqrt(Math.pow(rejector.getPoint().getX() - agentX,2.0d) +
+				Math.pow(rejector.getPoint().getY() - agentY,2.0d));
+		float angle = (float)Math.atan2(rejector.getPoint().getY() - agentY,rejector.getPoint().getX() - agentX);
 
 		//Get the freak outta here
 		if(distance < rejector.getRadius())
-			return new Point((float) (-1.0f * rejector.getStrength() * Math.cos(angle)), (float) (-1.0f * rejector.getStrength() * Math.sin(angle)));
+			return new Point((float)(-1.0f * rejector.getStrength() * Math.cos(angle)),(float)(-1.0f * rejector.getStrength() * Math.sin(angle)));
 		//Don't worry about me, you're somewhere out there
 		if(distance > (rejector.getSpread() + rejector.getRadius()))
-			return new Point(0.0f, 0.0f);
+			return new Point(0.0f,0.0f);
 		//You should feel more pressure the closer you get
-		return new Point((float) (-1.0f * rejector.getStrength() * ((rejector.getSpread() + rejector.getRadius() - distance) / rejector.getSpread()) * Math.cos(angle)), (float) (-1.0f * rejector.getStrength() * ((rejector.getSpread() + rejector.getRadius() - distance) / rejector.getSpread()) * Math.sin(angle)));
+		return new Point((float)(-1.0f * rejector.getStrength() * ((rejector.getSpread() + rejector.getRadius() - distance) / rejector.getSpread()) * Math.cos(angle)),(float)(-1.0f * rejector.getStrength() * ((rejector.getSpread() + rejector.getRadius() - distance) / rejector.getSpread()) * Math.sin(angle)));
 	}
 
 	private static Point evaluateTangential(float agentX, float agentY, PotentialField tang){
-		float distance = (float) Math.sqrt(Math.pow(tang.getPoint().getX() - agentX, 2.0d) +
-				Math.pow(tang.getPoint().getY() - agentY, 2.0d));
+		float distance = (float)Math.sqrt(Math.pow(tang.getPoint().getX() - agentX,2.0d) +
+				Math.pow(tang.getPoint().getY() - agentY,2.0d));
 
 		// Same as rejector, but modify angle by 90 degrees
 		float ninety = 1.57079633f; // add = counterclockwise, subtract = clockwise
-		float angle = (float) Math.atan2(tang.getPoint().getY() - agentY, tang.getPoint().getX() - agentX);
+		float angle = (float)Math.atan2(tang.getPoint().getY() - agentY,tang.getPoint().getX() - agentX);
 		angle -= ninety;
 
 		//Get the freak outta here
 		if(distance < tang.getRadius())
-			return new Point((float) (-1.0f * tang.getStrength() * Math.cos(angle)), (float) (-1.0f * tang.getStrength() * Math.sin(angle)));
+			return new Point((float)(-1.0f * tang.getStrength() * Math.cos(angle)),(float)(-1.0f * tang.getStrength() * Math.sin(angle)));
 		//Don't worry about me, you're somewhere out there
 		if(distance > (tang.getSpread() + tang.getRadius()))
-			return new Point(0.0f, 0.0f);
+			return new Point(0.0f,0.0f);
 		//You should feel more pressure the closer you get
-		return new Point((float) (-1.0f * tang.getStrength() * ((tang.getSpread() + tang.getRadius() - distance) / tang.getSpread()) * Math.cos(angle)), (float) (-1.0f * tang.getStrength() * ((tang.getSpread() + tang.getRadius() - distance) / tang.getSpread()) * Math.sin(angle)));
+		return new Point((float)(-1.0f * tang.getStrength() * ((tang.getSpread() + tang.getRadius() - distance) / tang.getSpread()) * Math.cos(angle)),(float)(-1.0f * tang.getStrength() * ((tang.getSpread() + tang.getRadius() - distance) / tang.getSpread()) * Math.sin(angle)));
 	}
 
 	protected Point evaluate(){
-		return evaluate(position.getX(), position.getY(), "all");
+		return evaluate(position.getX(),position.getY(),"all");
 	}
 
 	private String decrepedGene = null;
+
 	public synchronized Point evaluate(float x, float y, String type){
 		//If I have a goal to wait, my vector will be a zero point
 		if(goal.equals("wait"))
@@ -118,15 +119,15 @@ public class PFAgent extends AbstractAgent{
 
 		if(retHome){
 			//Calculate distance from me to my flag, if I'm home restart
-			float distance = (float) Math.sqrt(Math.pow(game.getTeam().getBase().getCenterPoint().getX() - position.getX(), 2.0d) +
-					Math.pow(game.getTeam().getBase().getCenterPoint().getY() - position.getY(), 2.0d));
+			float distance = (float)Math.sqrt(Math.pow(game.getTeam().getBase().getCenterPoint().getX() - position.getX(),2.0d) +
+					Math.pow(game.getTeam().getBase().getCenterPoint().getY() - position.getY(),2.0d));
 
 			if(distance < game.getTeam().getBase().getRadius()){
 				retHome = false;
 				//Notify commander of my lack of awesomeness through event
 				if(game.getTeam() instanceof Commander){
 					String note = game.getTeam().getColor() + "->" + goal + " TIMEOUT";
-					PFEvolutionCommander.PFTankEvent event = new PFEvolutionCommander.PFTankEvent(this, decrepedGene, 280000l, note);
+					PFEvolutionCommander.PFTankEvent event = new PFEvolutionCommander.PFTankEvent(this,decrepedGene,280000l,note);
 					((Commander)game.getTeam()).sendBZRFlagEvent(event);
 					decrepedGene = null;
 				}
@@ -134,7 +135,7 @@ public class PFAgent extends AbstractAgent{
 		}
 
 
-		Point vector = new Point(0.0f, 0.0f);
+		Point vector = new Point(0.0f,0.0f);
 
 		//I've just lost the flag (By returning it to my base) and I still have my base as my attractor
 		if(!retHome && flag.equals("-") && attractor != null && attractor.getPoint().equals(game.getTeam().getFlag().getPoint())){
@@ -147,7 +148,7 @@ public class PFAgent extends AbstractAgent{
 			//Notify commander of last time to get flag, Ask the commander for a new gene to test?
 			if(game.getTeam() instanceof Commander && (now.getTime() - startTime.getTime()) >= 500){
 				String note = game.getTeam().getColor() + "->" + goal;
-				PFEvolutionCommander.PFTankEvent event = new PFEvolutionCommander.PFTankEvent(this, gene.getGene(), now.getTime() - startTime.getTime(), note);
+				PFEvolutionCommander.PFTankEvent event = new PFEvolutionCommander.PFTankEvent(this,gene.getGene(),now.getTime() - startTime.getTime(),note);
 				((Commander)game.getTeam()).sendBZRFlagEvent(event);
 			}
 			PotentialField attractor = new PotentialField();
@@ -177,7 +178,7 @@ public class PFAgent extends AbstractAgent{
 		}
 
 		if(type.equals("attractors") || type.equals("all")){
-			Point vec = evaluateAttractor(x, y, this.attractor);
+			Point vec = evaluateAttractor(x,y,this.attractor);
 			vector.setX(vector.getX() + vec.getX());
 			vector.setY(vector.getY() + vec.getY());
 		}
@@ -193,7 +194,7 @@ public class PFAgent extends AbstractAgent{
 				rejectorPotentialField.setPoint(obstacle.getCenterPoint());
 				rejectorPotentialField.setRadius(obstacle.getRadius() * gene.getRejRadius());
 				rejectorPotentialField.setSpread(obstacle.getRadius() * gene.getRejSpread());
-				Point vec = evaluateRejector(x, y, rejectorPotentialField);
+				Point vec = evaluateRejector(x,y,rejectorPotentialField);
 				vector.setX(vector.getX() + vec.getX());
 				vector.setY(vector.getY() + vec.getY());
 			}
@@ -201,7 +202,7 @@ public class PFAgent extends AbstractAgent{
 				tangentialPotentialField.setPoint(obstacle.getCenterPoint());
 				tangentialPotentialField.setRadius(obstacle.getRadius() * gene.getTanRadius());
 				tangentialPotentialField.setSpread(obstacle.getRadius() * gene.getTanSpread());
-				Point vec = evaluateTangential(x, y, tangentialPotentialField);
+				Point vec = evaluateTangential(x,y,tangentialPotentialField);
 				vector.setX(vector.getX() + vec.getX());
 				vector.setY(vector.getY() + vec.getY());
 			}
@@ -216,7 +217,7 @@ public class PFAgent extends AbstractAgent{
 		for(Team team : game.getTeams()){
 			for(Tank tank : team.getTanks()){
 				tankField.setPoint(tank.getPosition());
-				Point vec = evaluateTangential(x, y, tankField);
+				Point vec = evaluateTangential(x,y,tankField);
 				vector.setX(vector.getX() + vec.getX());
 				vector.setY(vector.getY() + vec.getY());
 			}
@@ -231,19 +232,19 @@ public class PFAgent extends AbstractAgent{
 	@Override
 	public synchronized void update(String status, int shotsAvailable, float timeToReload, String flag, float positionX, float positionY, float velocityX, float velocityY, float angle, float angleVelocity){
 		//Invoke the default behavior
-		super.update(status, shotsAvailable, timeToReload, flag, positionX, positionY, velocityX, velocityY, angle, angleVelocity);
+		super.update(status,shotsAvailable,timeToReload,flag,positionX,positionY,velocityX,velocityY,angle,angleVelocity);
 
 		Point vector = evaluate();
 
 		//Probably don't need a speed controller, speed will be derived from magnitude of PF measure: speedController.calculate(distanceToTarget)
 
 		//Calculate the magnitude of the vector to determine how fast the potential fields ask me to be
-		float magnitude = (float) Math.sqrt(Math.pow(vector.getX(), 2f) + Math.pow(vector.getY(), 2f));
+		float magnitude = (float)Math.sqrt(Math.pow(vector.getX(),2f) + Math.pow(vector.getY(),2f));
 		desiredSpeed = magnitude;
 
 		//Calculate what the potential fields ask my angle to be, and what kind of difference there is between that and where I am
-		float ang = (float) Math.atan2(vector.getY() - 0.0f, vector.getX() - 0.0f);
-		float diff = (float) Math.atan2(Math.sin(ang - angle), Math.cos(ang - angle));
+		float ang = (float)Math.atan2(vector.getY() - 0.0f,vector.getX() - 0.0f);
+		float diff = (float)Math.atan2(Math.sin(ang - angle),Math.cos(ang - angle));
 		desiredAngularVelocity = angleController.calculate(diff * -1f);
 	}
 

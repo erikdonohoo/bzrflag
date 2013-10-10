@@ -29,8 +29,8 @@ public class GameControllerSingleton{
 
 	public synchronized GameController addGameController(String host, Integer port){
 		String key = UUID.randomUUID().toString();
-		GameController gameController = new GameController(key, host, port);
-		gameControllerMap.put(key, gameController);
+		GameController gameController = new GameController(key,host,port);
+		gameControllerMap.put(key,gameController);
 		return gameController;
 	}
 

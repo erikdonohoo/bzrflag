@@ -5,7 +5,7 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-@JsonIgnoreProperties(ignoreUnknown=true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PotentialField{
 	protected String type;
 	protected Point point;

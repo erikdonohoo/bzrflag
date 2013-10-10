@@ -12,7 +12,7 @@ import javax.ws.rs.core.Response;
 @Path("/games/{gameId}/teams")
 public class TeamResource{
 	@GET
-	public Response getTeams(@PathParam(value="gameId") String gameId){
+	public Response getTeams(@PathParam(value = "gameId") String gameId){
 		GameController gameController = GameControllerSingleton.getInstance().getGameController(gameId);
 
 		if(gameController == null)
@@ -23,7 +23,7 @@ public class TeamResource{
 
 	@GET
 	@Path("/{teamId}")
-	public Response getTeam(@PathParam(value="gameId") String gameId, @PathParam(value="teamId") String teamId){
+	public Response getTeam(@PathParam(value = "gameId") String gameId, @PathParam(value = "teamId") String teamId){
 		GameController gameController = GameControllerSingleton.getInstance().getGameController(gameId);
 
 		if(gameController == null)
@@ -39,7 +39,7 @@ public class TeamResource{
 
 	@GET
 	@Path("/me")
-	public Response getTeam(@PathParam(value="gameId") String gameId){
+	public Response getTeam(@PathParam(value = "gameId") String gameId){
 		GameController gameController = GameControllerSingleton.getInstance().getGameController(gameId);
 
 		if(gameController == null)

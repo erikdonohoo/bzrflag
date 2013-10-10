@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @XmlRootElement
-@JsonIgnoreProperties(ignoreUnknown=true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Game{
 	//connecting, initializing, playing, quitting, finished
 	protected volatile String id;

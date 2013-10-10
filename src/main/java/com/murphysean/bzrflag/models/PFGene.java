@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @XmlRootElement
-@JsonIgnoreProperties(ignoreUnknown=true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PFGene{
 	protected String gene;
 	protected int generation;

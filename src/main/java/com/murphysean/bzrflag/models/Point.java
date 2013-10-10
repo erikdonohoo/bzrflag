@@ -5,7 +5,7 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-@JsonIgnoreProperties(ignoreUnknown=true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Point{
 	protected volatile float x;
 	protected volatile float y;
@@ -47,10 +47,10 @@ public class Point{
 		if(this == o) return true;
 		if(o == null || getClass() != o.getClass()) return false;
 
-		Point point = (Point) o;
+		Point point = (Point)o;
 
-		if(Float.compare(point.x, x) != 0) return false;
-		if(Float.compare(point.y, y) != 0) return false;
+		if(Float.compare(point.x,x) != 0) return false;
+		if(Float.compare(point.y,y) != 0) return false;
 
 		return true;
 	}

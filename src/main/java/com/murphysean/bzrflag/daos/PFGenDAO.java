@@ -24,19 +24,19 @@ public class PFGenDAO{
 				"VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?);");
 
 		BoundStatement boundStatement = new BoundStatement(statement)
-				.setString("gene", pfGene.getGene())
-				.setInt("generation", pfGene.getGeneration())
-				.setFloat("attradius", pfGene.getAttRadius())
-				.setFloat("attspread", pfGene.getAttSpread())
-				.setFloat("attstrength", pfGene.getAttStrength())
-				.setFloat("rejradius", pfGene.getRejRadius())
-				.setFloat("rejspread", pfGene.getRejSpread())
-				.setFloat("rejstrength", pfGene.getRejStrength())
-				.setFloat("tanradius", pfGene.getTanRadius())
-				.setFloat("tanspread", pfGene.getTanSpread())
-				.setFloat("tanstrength", pfGene.getTanStrength())
-				.setList("parentgenes", pfGene.getParentGenes())
-				.setString("mutations", pfGene.getMutations());
+				.setString("gene",pfGene.getGene())
+				.setInt("generation",pfGene.getGeneration())
+				.setFloat("attradius",pfGene.getAttRadius())
+				.setFloat("attspread",pfGene.getAttSpread())
+				.setFloat("attstrength",pfGene.getAttStrength())
+				.setFloat("rejradius",pfGene.getRejRadius())
+				.setFloat("rejspread",pfGene.getRejSpread())
+				.setFloat("rejstrength",pfGene.getRejStrength())
+				.setFloat("tanradius",pfGene.getTanRadius())
+				.setFloat("tanspread",pfGene.getTanSpread())
+				.setFloat("tanstrength",pfGene.getTanStrength())
+				.setList("parentgenes",pfGene.getParentGenes())
+				.setString("mutations",pfGene.getMutations());
 
 		session.execute(boundStatement);
 
@@ -47,7 +47,7 @@ public class PFGenDAO{
 		PreparedStatement statement = session.prepare("SELECT * FROM pfgenetics WHERE gene = ?");
 
 		BoundStatement boundStatement = new BoundStatement(statement)
-				.setString("gene", gene);
+				.setString("gene",gene);
 
 		ResultSet resultSet = session.execute(boundStatement);
 		Row row = resultSet.one();
@@ -67,7 +67,7 @@ public class PFGenDAO{
 			pfGene.setTanSpread(row.getFloat("tanspread"));
 			pfGene.setTanStrength(row.getFloat("tanstrength"));
 
-			pfGene.setParentGenes(row.getList("parentgenes", String.class));
+			pfGene.setParentGenes(row.getList("parentgenes",String.class));
 			pfGene.setMutations(row.getString("mutations"));
 			return pfGene;
 		}
@@ -79,8 +79,8 @@ public class PFGenDAO{
 		PreparedStatement statement = session.prepare("UPDATE pfgenetics SET fitness = fitness + [?] WHERE gene = ?");
 
 		BoundStatement boundStatement = new BoundStatement(statement)
-				.setFloat("fitness", fitness)
-				.setString("gene", gene);
+				.setFloat("fitness",fitness)
+				.setString("gene",gene);
 
 		session.execute(boundStatement);
 	}
@@ -109,7 +109,7 @@ public class PFGenDAO{
 			pfGene.setTanSpread(row.getFloat("tanspread"));
 			pfGene.setTanStrength(row.getFloat("tanstrength"));
 
-			pfGene.setParentGenes(row.getList("parentgenes", String.class));
+			pfGene.setParentGenes(row.getList("parentgenes",String.class));
 			pfGene.setMutations(row.getString("mutations"));
 			ret.add(pfGene);
 		}
@@ -122,7 +122,7 @@ public class PFGenDAO{
 
 		PreparedStatement statement = session.prepare("SELECT * FROM pfgenetics WHERE generation = ?");
 		BoundStatement boundStatement = new BoundStatement(statement)
-				.setInt("generation", generation);
+				.setInt("generation",generation);
 
 		ResultSet resultSet = session.execute(boundStatement);
 
@@ -142,7 +142,7 @@ public class PFGenDAO{
 			pfGene.setTanSpread(row.getFloat("tanspread"));
 			pfGene.setTanStrength(row.getFloat("tanstrength"));
 
-			pfGene.setParentGenes(row.getList("parentgenes", String.class));
+			pfGene.setParentGenes(row.getList("parentgenes",String.class));
 			pfGene.setMutations(row.getString("mutations"));
 			ret.add(pfGene);
 		}
@@ -154,10 +154,10 @@ public class PFGenDAO{
 		PreparedStatement statement = session.prepare("INSERT INTO pfgeneticsfitness(gene, fitness, map, note) VALUES (?,?,?,?)");
 
 		BoundStatement boundStatement = new BoundStatement(statement)
-				.setString("gene", gene)
-				.setInt("fitness", (int)fitness)
-				.setString("map", map)
-				.setString("note", note);
+				.setString("gene",gene)
+				.setInt("fitness",(int)fitness)
+				.setString("map",map)
+				.setString("note",note);
 
 		session.execute(boundStatement);
 	}
@@ -167,7 +167,7 @@ public class PFGenDAO{
 
 		PreparedStatement statement = session.prepare("SELECT * FROM pfgeneticsfitness WHERE gene = ?");
 		BoundStatement boundStatement = new BoundStatement(statement)
-				.setString("gene", gene);
+				.setString("gene",gene);
 
 		ResultSet resultSet = session.execute(boundStatement);
 

@@ -15,6 +15,6 @@ public class ShotEvent extends BZRFlagEvent{
 	public ShotEvent(float x, float y, float vx, float vy){
 		super(BZRFlagEvent.SHOT_TYPE);
 		this.point = new Point(x,y);
-		this.velocity = new Point(vx, vy);
+		this.velocity = new Point(vx,vy);
 	}
 }

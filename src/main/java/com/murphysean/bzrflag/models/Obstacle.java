@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @XmlRootElement
-@JsonIgnoreProperties(ignoreUnknown=true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Obstacle{
 	protected List<Point> points;
 	protected Point centerPoint;
@@ -69,7 +69,7 @@ public class Obstacle{
 		float maxRadius = 0.0f;
 		for(Point corner : points){
 			//Calculate the distance from the center to each corner
-			float distance = (float)Math.sqrt(Math.pow(corner.getX() - centerPoint.getX(), 2) + Math.pow(corner.getY() - centerPoint.getY(), 2));
+			float distance = (float)Math.sqrt(Math.pow(corner.getX() - centerPoint.getX(),2) + Math.pow(corner.getY() - centerPoint.getY(),2));
 			if(distance > maxRadius)
 				maxRadius = distance;
 		}

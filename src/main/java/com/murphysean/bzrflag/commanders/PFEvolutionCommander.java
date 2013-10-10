@@ -60,7 +60,7 @@ public class PFEvolutionCommander extends AbstractCommander{
 			PFTankEvent pfTankEvent = (PFTankEvent)event;
 
 			//Save the gene and time to the database
-			pfGenDAO.createPFGeneFitness(((PFTankEvent)event).getGene(), ((PFTankEvent)event).getTime(), "default", ((PFTankEvent)event).getNote());
+			pfGenDAO.createPFGeneFitness(((PFTankEvent)event).getGene(),((PFTankEvent)event).getTime(),"default",((PFTankEvent)event).getNote());
 			//Get the tank a new gene to test
 			int random = (int)Math.floor(Math.random() * 99.99d);
 			((PFTankEvent)event).getPfAgent().setGene(genes.get(random));

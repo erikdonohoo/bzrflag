@@ -70,9 +70,9 @@ public class BZRFlagOutputCommunicator implements Runnable{
 	public void updateMyTeam(){
 		for(Tank tank : game.getTeam().getTanks()){
 			if(tank instanceof Agent){
-				writeSpeed(tank.getId(), ((Agent) tank).getDesiredSpeed());
-				writeAngVel(tank.getId(), ((Agent) tank).getDesiredAngularVelocity());
-				if(((Agent) tank).getDesiredTriggerStatus())
+				writeSpeed(tank.getId(),((Agent)tank).getDesiredSpeed());
+				writeAngVel(tank.getId(),((Agent)tank).getDesiredAngularVelocity());
+				if(((Agent)tank).getDesiredTriggerStatus())
 					writeShoot(tank.getId());
 			}
 		}

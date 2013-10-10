@@ -4,9 +4,9 @@ import java.util.Date;
 
 /**
  * Once you have the basic socket communication working build a really dumb agent. This agent should repeat the following forever:
- Move forward for 3-8 seconds
- Turn left about 60 degrees and then start going straight again
- In addition to this movement your really dumb agent should also shoot every 2 seconds (random between 1.5 and 2.5 seconds) or so.
+ * Move forward for 3-8 seconds
+ * Turn left about 60 degrees and then start going straight again
+ * In addition to this movement your really dumb agent should also shoot every 2 seconds (random between 1.5 and 2.5 seconds) or so.
  */
 public class DumbAgent extends AbstractAgent{
 	public static final int MOVE_MIN = 3;

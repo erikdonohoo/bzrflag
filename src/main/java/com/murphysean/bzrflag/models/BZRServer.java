@@ -57,7 +57,7 @@ public class BZRServer{
 	public BZRServer(String host, int port) throws Exception{
 		setGameState("connecting");
 		//Open a socket
-		socket = new Socket(host, port);
+		socket = new Socket(host,port);
 		//Handshake
 		bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
@@ -317,7 +317,7 @@ public class BZRServer{
 		String[] parts = serverString.split("\\s+");
 		int index = Integer.valueOf(parts[1]);
 		Tank tank = team.getTanks().get(index);
-		tank.update(parts[3], Integer.valueOf(parts[4]), Float.valueOf(parts[5]), parts[6], Float.valueOf(parts[7]), Float.valueOf(parts[8]), Float.valueOf(parts[10]), Float.valueOf(parts[11]), Float.valueOf(parts[9]), Float.valueOf(parts[12]));
+		tank.update(parts[3],Integer.valueOf(parts[4]),Float.valueOf(parts[5]),parts[6],Float.valueOf(parts[7]),Float.valueOf(parts[8]),Float.valueOf(parts[10]),Float.valueOf(parts[11]),Float.valueOf(parts[9]),Float.valueOf(parts[12]));
 	}
 
 	public void readOtherTanks() throws Exception{
@@ -343,9 +343,9 @@ public class BZRServer{
 		String color = parts[2];
 		for(Team team : teams){
 			if(team.getColor().equals(color)){
-				int index = Integer.valueOf(parts[1].replaceAll("\\D", ""));
+				int index = Integer.valueOf(parts[1].replaceAll("\\D",""));
 				Tank tank = team.getTanks().get(index);
-				tank.update(parts[3], parts[4], Float.valueOf(parts[5]), Float.valueOf(parts[6]), Float.valueOf(parts[7]));
+				tank.update(parts[3],parts[4],Float.valueOf(parts[5]),Float.valueOf(parts[6]),Float.valueOf(parts[7]));
 				break;
 			}
 		}
@@ -358,9 +358,9 @@ public class BZRServer{
 	public void updateMyTeam() throws Exception{
 		for(Tank tank : team.getTanks()){
 			if(tank instanceof Agent){
-				writeSpeed(tank.getId(), ((Agent) tank).getDesiredSpeed());
-				writeAngVel(tank.getId(), ((Agent) tank).getDesiredAngularVelocity());
-				if(((Agent) tank).getDesiredTriggerStatus())
+				writeSpeed(tank.getId(),((Agent)tank).getDesiredSpeed());
+				writeAngVel(tank.getId(),((Agent)tank).getDesiredAngularVelocity());
+				if(((Agent)tank).getDesiredTriggerStatus())
 					writeShoot(tank.getId());
 			}
 		}

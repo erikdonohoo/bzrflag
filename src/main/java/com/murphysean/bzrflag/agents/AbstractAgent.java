@@ -10,11 +10,11 @@ import org.codehaus.jackson.annotate.JsonTypeInfo;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-@JsonIgnoreProperties(ignoreUnknown=true)
-@JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="type")
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME,include = JsonTypeInfo.As.PROPERTY,property = "type")
 @JsonSubTypes({
-		@JsonSubTypes.Type(value=PFAgent.class, name="dumb"),
-		@JsonSubTypes.Type(value=PFAgent.class, name="pf")
+		@JsonSubTypes.Type(value = PFAgent.class,name = "dumb"),
+		@JsonSubTypes.Type(value = PFAgent.class,name = "pf")
 })
 public abstract class AbstractAgent extends Tank implements Agent{
 	protected volatile String type;
