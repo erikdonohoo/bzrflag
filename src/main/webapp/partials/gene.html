@@ -2,7 +2,7 @@
 	<h3>Top Genes</h3>
 	<img ng-show="data.results.length == 0" class="loading" src="assets/img/loading.gif" />
 	<div ng-repeat="gene in data.results | orderBy:'overallFitness'" class="row">
-		<div class="col-md-6">
+		<div class="col-md-6" ng-click="gene.showall = !gene.showall">
 			<strong>{{gene.gene}}</strong>
 		</div>
 		<div class="col-md-3">
@@ -11,12 +11,10 @@
 		<div class="col-md-3">
 			Naive Fitness: {{gene.naiveFitness}}
 		</div>
-		<!-- <div class="col-md-1" ng-init="gene.showall = false;" ng-click="gene.showall = !gene.showall">
-			Details
+		<br>
+		<div class="col-md-12" ng-init="gene.showall = false;" ng-show="gene.showall">
+			<small ng-repeat="run in gene.fitness">{{run.fitness}}, </small>
 		</div>
-		<div ng-repeat="run in gene.fitness" ng-show="gene.showall">
-			<small>{{run.fitness}}</small>
-		</div> -->
 		<hr>
 	</div>
 </div>
